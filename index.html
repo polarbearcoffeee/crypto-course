@@ -87,7 +87,10 @@
     background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
     padding:22px;margin-bottom:18px;transition:border-color .2s;
   }
-  .module.done{border-color:var(--ok);}
+  .module.passed{border-color:var(--ok);}
+  .module.locked{
+    padding:18px 22px;display:flex;align-items:center;gap:14px;opacity:.7;
+  }
   .module-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
   .module-title{display:flex;align-items:center;gap:10px;}
   .module-num{
@@ -95,19 +98,48 @@
     border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
     font-size:13px;color:var(--text-dim);flex:none;
   }
-  .module.done .module-num{background:var(--ok);color:#04241a;border-color:var(--ok);}
+  .module.passed .module-num{background:var(--ok);color:#04241a;border-color:var(--ok);}
   .module h3{margin:0;font-size:17px;}
   .module .meta{color:var(--text-dim);font-size:13px;margin-top:2px;}
-
-  .done-toggle{
-    display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-dim);
-    border:1px solid var(--border);padding:7px 12px;border-radius:999px;background:var(--bg-card-2);
-    white-space:nowrap;user-select:none;
-  }
-  .done-toggle input{accent-color:var(--ok);width:15px;height:15px;}
-  .module.done .done-toggle{color:var(--ok);border-color:var(--ok);}
+  .lock-icon{font-size:18px;flex:none;}
+  .lock-text{font-size:13px;color:var(--text-dim);}
+  .lock-text b{color:var(--text);}
 
   .module-body{margin-top:16px;}
+
+  .quiz{
+    margin-top:20px;padding-top:18px;border-top:1px dashed var(--border);
+  }
+  .quiz-title{font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);}
+  .quiz-q{margin-bottom:16px;}
+  .quiz-q p{margin:0 0 8px;font-size:14px;}
+  .quiz-option{
+    display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;
+    border:1px solid var(--border);background:var(--bg-card-2);margin-bottom:6px;
+    font-size:13px;cursor:pointer;
+  }
+  .quiz-option input{accent-color:var(--accent);}
+  .quiz-option.correct{border-color:var(--ok);color:var(--ok);}
+  .quiz-option.wrong{border-color:var(--danger);color:var(--danger);}
+  .quiz input:disabled ~ span, .quiz-option input:disabled{cursor:default;}
+  .quiz-submit{
+    padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#04121c;border:none;cursor:pointer;
+  }
+  .quiz-retry{
+    padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;
+    background:var(--bg-card-2);color:var(--text-dim);border:1px solid var(--border);cursor:pointer;margin-left:8px;
+  }
+  .quiz-result{
+    margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13px;
+  }
+  .quiz-result.pass{background:rgba(52,211,153,.1);border:1px solid var(--ok);color:var(--ok);}
+  .quiz-result.fail{background:rgba(248,113,113,.1);border:1px solid var(--danger);color:var(--danger);}
+  .quiz-passed-banner{
+    margin-top:20px;padding:14px 16px;border-radius:10px;background:rgba(52,211,153,.1);
+    border:1px solid var(--ok);color:var(--ok);font-size:13px;display:flex;justify-content:space-between;
+    align-items:center;gap:12px;flex-wrap:wrap;
+  }
   .module ul{margin:0;padding-left:20px;color:var(--text-dim);font-size:14px;}
   .module li{margin-bottom:6px;}
 
@@ -195,7 +227,7 @@
 
   <section class="block" id="curriculum">
     <h2>新手必修課程</h2>
-    <div class="sub">依順序學習效果最好。每一課都有文字重點＋教學影片，看完文字、看完影片後記得打勾標記完成。</div>
+    <div class="sub">依順序解鎖。每一課看完文字重點＋教學影片後，要通過課後測驗才會解鎖下一課。</div>
     <div id="moduleList"></div>
   </section>
 
@@ -228,7 +260,12 @@
         "比特幣（BTC）是第一個、也是市值最大的加密貨幣，但市場上有上千種不同用途的幣。",
         "先建立觀念：加密貨幣是一個新的資產類別，不是穩賺不賠的提款機。"
       ],
-      videoUrl: ""
+      videoUrl: "",
+      quiz: [
+        { q: "加密貨幣的資產記錄主要保存在哪裡？", options: ["銀行的內部資料庫", "區塊鏈這種公開帳本", "交易所的內部試算表", "政府的登記系統"], correct: 1 },
+        { q: "下列哪句話最符合本課精神？", options: ["加密貨幣保證穩定獲利", "加密貨幣是新資產類別，需自行研究風險", "只要買比特幣就不會賠錢", "價格完全不會波動"], correct: 1 },
+        { q: "加密貨幣跟一般銀行帳戶最大的不同是？", options: ["資產由自己的錢包掌控，沒有銀行代為保管", "一定要臨櫃才能開戶", "有政府存款保險保障", "無法轉帳給別人"], correct: 0 }
+      ]
     },
     {
       id: "blockchain-basics",
@@ -240,7 +277,12 @@
         "因為帳本公開又不能竄改，才能在沒有銀行的情況下讓大家互相信任交易記錄。",
         "不用懂程式碼，只要記得：公開、難篡改、大家共同維護，就是核心精神。"
       ],
-      videoUrl: ""
+      videoUrl: "",
+      quiz: [
+        { q: "區塊鏈最貼切的比喻是？", options: ["只有銀行能看的秘密帳本", "公開、大家共同維護、難以竄改的帳本", "可以隨時修改歷史紀錄的雲端硬碟", "只存在單一伺服器的資料庫"], correct: 1 },
+        { q: "為什麼「不能竄改」這個特性很重要？", options: ["讓大家能在沒有銀行的情況下互相信任交易紀錄", "讓交易速度變得更快", "讓政府可以直接控制帳本", "讓私鑰變得不重要"], correct: 0 },
+        { q: "「區塊鏈」這個名稱的由來是？", options: ["因為它只有一個區塊", "交易被打包成區塊，一個接一個串起來", "因為每個區塊都是正方形", "跟礦工挖到的石頭有關"], correct: 1 }
+      ]
     },
     {
       id: "wallets-keys",
@@ -252,7 +294,12 @@
         "私鑰／助記詞（12～24 個英文單字）絕對不能給任何人看、不能拍照上傳雲端、不能貼給客服。",
         "口訣：忘記密碼可以救，私鑰丟了通常沒人救得回來。"
       ],
-      videoUrl: ""
+      videoUrl: "",
+      quiz: [
+        { q: "私鑰代表什麼？", options: ["只是一個備用密碼", "資產所有權的證明，遺失通常無法救回", "交易所的客服帳號", "可以隨意分享的公開資訊"], correct: 1 },
+        { q: "冷錢包（硬體錢包）的特點是？", options: ["離線保存，適合長期資產，安全性較高", "一定要連網才能用", "比熱錢包更容易被盜", "不需要任何密碼"], correct: 0 },
+        { q: "助記詞（12～24 個單字）該怎麼處理？", options: ["拍照存雲端方便查詢", "貼給自稱客服的人核對", "絕對不給任何人看，也不上傳雲端", "分享在社群貼文炫耀"], correct: 2 }
+      ]
     },
     {
       id: "buying-crypto",
@@ -264,7 +311,12 @@
         "下單前先搞懂「市價單」與「限價單」的差別，避免因為滑價買貴、賣便宜。",
         "小額練習優先：先用你可以承受全部損失的小金額熟悉流程，再慢慢加碼。"
       ],
-      videoUrl: ""
+      videoUrl: "",
+      quiz: [
+        { q: "CEX 跟 DEX 的差別是？", options: ["CEX 是中心化交易所需實名認證，DEX 是去中心化需自備錢包", "兩者完全一樣", "DEX 一定比 CEX 安全", "CEX 不需要任何認證"], correct: 0 },
+        { q: "市價單跟限價單的差別是？", options: ["市價單以目前市場價格立即成交，限價單可指定價格等待成交", "兩者完全相同", "限價單一定比較貴", "市價單只能用來賣出"], correct: 0 },
+        { q: "新手第一次交易建議怎麼做？", options: ["直接投入全部資金", "先用可承受全部損失的小金額熟悉流程", "跟親友借錢加碼", "不用了解流程直接下大單"], correct: 1 }
+      ]
     },
     {
       id: "security-scams",
@@ -276,7 +328,12 @@
         "務必開啟雙重驗證（2FA），優先使用驗證器 App 而非簡訊驗證。",
         "任何要求你「先付款才能提現」「先繳保證金解鎖資產」的情況，一律是詐騙。"
       ],
-      videoUrl: ""
+      videoUrl: "",
+      quiz: [
+        { q: "遇到「保證獲利」「限時翻倍」的訊息應該？", options: ["立刻打錢卡位", "先假設是詐騙，提高警覺", "分享給更多朋友一起參加", "把私鑰給對方核對身分"], correct: 1 },
+        { q: "雙重驗證（2FA）建議優先用哪種方式？", options: ["簡訊驗證", "驗證器 App", "完全不開", "用生日當驗證碼"], correct: 1 },
+        { q: "「先繳保證金才能解鎖提現」的情況通常是？", options: ["正常的交易所規定", "一定是詐騙", "只要金額小就安全", "政府規定的稅金"], correct: 1 }
+      ]
     },
     {
       id: "glossary",
@@ -289,11 +346,17 @@
         "穩定幣（Stablecoin）：價值錨定法幣（如美元）、波動較小的加密貨幣。",
         "市值（Market Cap）：一種幣的「現價 × 流通供應量」，粗略反映該幣的規模。"
       ],
-      videoUrl: ""
+      videoUrl: "",
+      quiz: [
+        { q: "HODL 的意思最接近？", options: ["立刻賣出換現金", "長期持有不輕易賣出", "每天頻繁交易", "只買穩定幣"], correct: 1 },
+        { q: "Gas Fee 指的是？", options: ["交易所的會員費", "在區塊鏈上執行交易需支付的手續費", "買幣送的贈品", "政府徵收的稅"], correct: 1 },
+        { q: "穩定幣（Stablecoin）的特點是？", options: ["價值錨定法幣如美元，波動較小", "波動比比特幣更大", "完全沒有價值", "只能用來投票"], correct: 0 }
+      ]
     }
   ];
 
-  var STORAGE_KEY = "crypto101_progress_v1";
+  var STORAGE_KEY = "crypto101_progress_v2";
+  var quizState = {};
 
   function loadProgress(){
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
@@ -301,6 +364,16 @@
   }
   function saveProgress(p){
     localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+  }
+  function isPassed(id){
+    var p = loadProgress();
+    return !!(p[id] && p[id].passed);
+  }
+  function isUnlocked(idx){
+    return idx === 0 || isPassed(MODULES[idx - 1].id);
+  }
+  function passThreshold(quiz){
+    return Math.max(1, quiz.length - 1);
   }
 
   function renderVideoSlot(mod){
@@ -313,51 +386,142 @@
       '</div></div>';
   }
 
+  function renderQuiz(mod){
+    var state = quizState[mod.id] || { submitted: false, answers: [] };
+    var need = passThreshold(mod.quiz);
+
+    if (isPassed(mod.id) && !state.retaking) {
+      var savedScore = loadProgress()[mod.id].score;
+      return '<div class="quiz-passed-banner">' +
+        '<span>✅ 已通過測驗（' + savedScore + ' / ' + mod.quiz.length + ' 分）</span>' +
+        '<button class="quiz-retry" data-retake="' + mod.id + '">重新測驗</button>' +
+      '</div>';
+    }
+
+    var html = '<div class="quiz"><div class="quiz-title">📝 課後測驗（答對 ' + need + ' / ' + mod.quiz.length + ' 題才能解鎖下一課）</div>';
+
+    mod.quiz.forEach(function(q, qIdx){
+      html += '<div class="quiz-q"><p>' + (qIdx + 1) + '. ' + q.q + '</p>';
+      q.options.forEach(function(opt, oIdx){
+        var cls = "quiz-option";
+        var checked = state.answers[qIdx] === oIdx ? "checked" : "";
+        var disabled = state.submitted ? "disabled" : "";
+        if (state.submitted){
+          if (oIdx === q.correct) cls += " correct";
+          else if (state.answers[qIdx] === oIdx) cls += " wrong";
+        }
+        html += '<label class="' + cls + '"><input type="radio" name="q_' + mod.id + '_' + qIdx + '" value="' + oIdx + '" ' + checked + ' ' + disabled + ' data-mod="' + mod.id + '" data-q="' + qIdx + '"> ' + opt + '</label>';
+      });
+      html += '</div>';
+    });
+
+    if (!state.submitted){
+      html += '<button class="quiz-submit" data-submit="' + mod.id + '">送出測驗</button>';
+    } else {
+      var pass = state.score >= need;
+      html += '<div class="quiz-result ' + (pass ? "pass" : "fail") + '">' +
+        (pass ? "🎉 太棒了，答對 " + state.score + " / " + mod.quiz.length + " 題，下一課解鎖了！" : "答對 " + state.score + " / " + mod.quiz.length + " 題，還沒達到 " + need + " 題，再檢查一次課程內容後重新作答。") +
+      '</div>';
+      html += '<button class="quiz-retry" data-retry="' + mod.id + '">重新作答</button>';
+    }
+
+    html += '</div>';
+    return html;
+  }
+
   function render(){
-    var progress = loadProgress();
     var list = document.getElementById("moduleList");
     list.innerHTML = "";
 
     MODULES.forEach(function(mod, idx){
-      var isDone = !!progress[mod.id];
+      var unlocked = isUnlocked(idx);
+      var passed = isPassed(mod.id);
       var el = document.createElement("div");
-      el.className = "module" + (isDone ? " done" : "");
+
+      if (!unlocked){
+        el.className = "module locked";
+        el.innerHTML =
+          '<div class="lock-icon">🔒</div>' +
+          '<div><h3>第 ' + (idx + 1) + ' 課：' + mod.title.replace(/^第\s*\d+\s*課[：:]\s*/, "") + '</h3>' +
+          '<div class="lock-text">先通過 <b>第 ' + idx + ' 課</b> 的測驗才會解鎖這一課。</div></div>';
+        list.appendChild(el);
+        return;
+      }
+
+      el.className = "module" + (passed ? " passed" : "");
       el.innerHTML =
         '<div class="module-head">' +
           '<div class="module-title">' +
-            '<div class="module-num">' + (idx+1) + '</div>' +
+            '<div class="module-num">' + (idx + 1) + '</div>' +
             '<div><h3>' + mod.title + '</h3><div class="meta">' + mod.meta + '</div></div>' +
           '</div>' +
-          '<label class="done-toggle">' +
-            '<input type="checkbox" data-id="' + mod.id + '" ' + (isDone ? "checked" : "") + '> 標記完成' +
-          '</label>' +
         '</div>' +
         '<div class="module-body">' +
           '<ul>' + mod.points.map(function(p){ return '<li>' + p + '</li>'; }).join("") + '</ul>' +
           renderVideoSlot(mod) +
+          renderQuiz(mod) +
         '</div>';
       list.appendChild(el);
     });
 
-    list.querySelectorAll('input[type="checkbox"]').forEach(function(cb){
-      cb.addEventListener("change", function(){
-        var p = loadProgress();
-        p[cb.dataset.id] = cb.checked;
-        saveProgress(p);
+    list.querySelectorAll('input[type="radio"][data-mod]').forEach(function(radio){
+      radio.addEventListener("change", function(){
+        var modId = radio.dataset.mod, qIdx = parseInt(radio.dataset.q, 10);
+        if (!quizState[modId]) quizState[modId] = { submitted: false, answers: [] };
+        quizState[modId].answers[qIdx] = parseInt(radio.value, 10);
+      });
+    });
+
+    list.querySelectorAll('[data-submit]').forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var modId = btn.dataset.submit;
+        var mod = MODULES.find(function(m){ return m.id === modId; });
+        var state = quizState[modId] || { answers: [] };
+        if (state.answers.length < mod.quiz.length || state.answers.indexOf(undefined) !== -1){
+          alert("請先回答完所有題目再送出。");
+          return;
+        }
+        var score = 0;
+        mod.quiz.forEach(function(q, qIdx){ if (state.answers[qIdx] === q.correct) score++; });
+        state.submitted = true;
+        state.score = score;
+        state.retaking = false;
+        quizState[modId] = state;
+
+        if (score >= passThreshold(mod.quiz)){
+          var p = loadProgress();
+          p[modId] = { passed: true, score: score };
+          saveProgress(p);
+        }
         render();
       });
     });
 
-    updateProgressUI(progress);
+    list.querySelectorAll('[data-retry]').forEach(function(btn){
+      btn.addEventListener("click", function(){
+        quizState[btn.dataset.retry] = { submitted: false, answers: [] };
+        render();
+      });
+    });
+
+    list.querySelectorAll('[data-retake]').forEach(function(btn){
+      btn.addEventListener("click", function(){
+        quizState[btn.dataset.retake] = { submitted: false, answers: [], retaking: true };
+        render();
+      });
+    });
+
+    updateProgressUI();
   }
 
-  function updateProgressUI(progress){
+  function updateProgressUI(){
+    var progress = loadProgress();
     var total = MODULES.length;
-    var done = MODULES.filter(function(m){ return !!progress[m.id]; }).length;
+    var done = MODULES.filter(function(m){ return isPassed(m.id); }).length;
     var pct = total === 0 ? 0 : Math.round(done / total * 100);
 
     document.getElementById("progressBar").style.width = pct + "%";
-    document.getElementById("progressText").textContent = "已完成 " + done + " / " + total + " 課";
+    document.getElementById("progressText").textContent = "已通過 " + done + " / " + total + " 課測驗";
     document.getElementById("progressPct").textContent = pct + "%";
 
     var unlocked = done === total;
