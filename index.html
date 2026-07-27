@@ -6,25 +6,28 @@
 <title>交易修煉學院｜專業交易導師的紀律養成系統</title>
 <style>
   :root{
-    --bg:#0b1120;
-    --bg-card:#121a2e;
-    --bg-card-2:#0f1626;
-    --border:#22304a;
-    --text:#e6ecf5;
-    --text-dim:#8b98b3;
-    --accent:#22d3ee;
-    --accent-2:#38bdf8;
-    --gold:#fbbf24;
-    --danger:#f87171;
-    --ok:#34d399;
-    --task:#fb7185;
-    --radius:16px;
+    --bg:#000000;
+    --bg-card:#161718;
+    --bg-card-2:#0e0f10;
+    --border:#26272a;
+    --text:#ffffff;
+    --text-dim:#9a9ba0;
+    --accent:#c6f24a;
+    --accent-2:#a3e635;
+    --accent-ink:#131f00;
+    --gold:#c6f24a;
+    --danger:#ff5757;
+    --ok:#c6f24a;
+    --task:#c6f24a;
+    --radius:18px;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
     font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",Segoe UI,sans-serif;
-    background:radial-gradient(1200px 600px at 80% -10%, #16213f 0%, var(--bg) 60%);
+    background:
+      radial-gradient(900px 500px at 85% -10%, rgba(198,242,74,.08) 0%, transparent 60%),
+      var(--bg);
     color:var(--text);
     line-height:1.7;
   }
@@ -34,23 +37,23 @@
 
   header.top{
     position:sticky;top:0;z-index:50;
-    background:rgba(11,17,32,0.9);
+    background:rgba(0,0,0,0.9);
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--border);
   }
   .nav{display:flex;align-items:center;justify-content:space-between;padding:12px 0;gap:16px;flex-wrap:wrap;}
   .brand{font-weight:800;font-size:17px;display:flex;align-items:center;gap:8px;white-space:nowrap;}
   .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);}
-  .tabs{display:flex;gap:6px;flex-wrap:wrap;}
+  .tabs{display:flex;gap:4px;flex-wrap:wrap;background:var(--bg-card-2);border:1px solid var(--border);border-radius:999px;padding:4px;}
   .tab-btn{
-    padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--bg-card-2);
+    padding:7px 14px;border-radius:999px;border:none;background:transparent;
     color:var(--text-dim);font-size:13px;cursor:pointer;white-space:nowrap;
   }
-  .tab-btn.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#04121c;border-color:transparent;font-weight:700;}
+  .tab-btn.active{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700;}
   .nick{font-size:13px;color:var(--text-dim);display:flex;align-items:center;gap:6px;white-space:nowrap;}
   .nick .av{
-    width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--task));
-    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#1a0e05;
+    width:26px;height:26px;border-radius:50%;background:var(--accent);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--accent-ink);
   }
 
   .view{display:none;padding:32px 0 60px;}
@@ -68,7 +71,7 @@
   .mentor-avatar{
     width:52px;height:52px;border-radius:50%;flex:none;
     display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#04121c;
+    background:var(--accent);color:var(--accent-ink);
   }
   .mentor-card h3{margin:0 0 4px;font-size:16px;}
   .mentor-card p{margin:0;color:var(--text-dim);font-size:14px;}
@@ -89,7 +92,7 @@
   .checkin-bar .txt b{color:var(--gold);}
   .checkin-btn{
     padding:9px 20px;border-radius:999px;border:none;font-weight:700;font-size:13px;cursor:pointer;
-    background:linear-gradient(90deg,var(--gold),var(--task));color:#1a0e05;
+    background:var(--accent);color:var(--accent-ink);
   }
   .checkin-btn:disabled{background:var(--bg-card-2);color:var(--text-dim);cursor:default;}
 
@@ -97,8 +100,8 @@
   .sec-sub{color:var(--text-dim);font-size:13px;margin-bottom:16px;}
 
   .task-card{
-    background:linear-gradient(135deg,rgba(251,113,133,.12),rgba(251,113,133,.02));
-    border:1px solid rgba(251,113,133,.4);border-radius:14px;padding:18px 20px;
+    background:linear-gradient(135deg,rgba(198,242,74,.12),rgba(198,242,74,.02));
+    border:1px solid rgba(198,242,74,.4);border-radius:14px;padding:18px 20px;
   }
   .task-card .lv-tag{font-size:11px;color:var(--task);font-weight:700;letter-spacing:1px;}
   .task-card h3{margin:6px 0 4px;font-size:17px;}
@@ -107,10 +110,10 @@
   .pill.on{border-color:var(--ok);color:var(--ok);}
   .goto-btn{
     margin-top:14px;display:inline-block;padding:9px 20px;border-radius:999px;font-weight:700;font-size:13px;
-    background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#04121c;border:none;cursor:pointer;
+    background:var(--accent);color:var(--accent-ink);border:none;cursor:pointer;
   }
   .all-done-card{
-    background:linear-gradient(135deg,rgba(52,211,153,.12),rgba(52,211,153,.02));
+    background:linear-gradient(135deg,rgba(198,242,74,.12),rgba(198,242,74,.02));
     border:1px solid var(--ok);border-radius:14px;padding:20px;text-align:center;color:var(--ok);font-size:14px;
   }
 
@@ -122,7 +125,7 @@
     width:30px;height:30px;border-radius:8px;background:var(--bg-card-2);border:1px solid var(--border);
     display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--text-dim);flex:none;
   }
-  .level-progress.done .num{background:var(--ok);color:#04241a;border-color:var(--ok);}
+  .level-progress.done .num{background:var(--ok);color:var(--accent-ink);border-color:var(--ok);}
   .level-progress .info{flex:1;}
   .level-progress .info .name{font-size:14px;font-weight:700;}
   .level-progress .info .sub{font-size:12px;color:var(--text-dim);}
@@ -154,7 +157,7 @@
     border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
     font-size:13px;color:var(--text-dim);flex:none;
   }
-  .module.passed .module-num{background:var(--ok);color:#04241a;border-color:var(--ok);}
+  .module.passed .module-num{background:var(--ok);color:var(--accent-ink);border-color:var(--ok);}
   .module h3{margin:0;font-size:17px;}
   .module .meta{color:var(--text-dim);font-size:13px;margin-top:2px;}
   .lock-icon{font-size:18px;flex:none;}
@@ -199,17 +202,17 @@
   .quiz-option.wrong{border-color:var(--danger);color:var(--danger);}
   .quiz-submit{
     padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;
-    background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#04121c;border:none;cursor:pointer;
+    background:var(--accent);color:var(--accent-ink);border:none;cursor:pointer;
   }
   .quiz-retry{
     padding:10px 22px;border-radius:999px;font-weight:700;font-size:13px;
     background:var(--bg-card-2);color:var(--text-dim);border:1px solid var(--border);cursor:pointer;margin-left:8px;
   }
   .quiz-result{margin-top:14px;padding:12px 14px;border-radius:10px;font-size:13px;}
-  .quiz-result.pass{background:rgba(52,211,153,.1);border:1px solid var(--ok);color:var(--ok);}
-  .quiz-result.fail{background:rgba(248,113,113,.1);border:1px solid var(--danger);color:var(--danger);}
+  .quiz-result.pass{background:rgba(198,242,74,.1);border:1px solid var(--ok);color:var(--ok);}
+  .quiz-result.fail{background:rgba(255,87,87,.1);border:1px solid var(--danger);color:var(--danger);}
   .quiz-passed-banner{
-    margin-top:20px;padding:14px 16px;border-radius:10px;background:rgba(52,211,153,.1);
+    margin-top:20px;padding:14px 16px;border-radius:10px;background:rgba(198,242,74,.1);
     border:1px solid var(--ok);color:var(--ok);font-size:13px;display:flex;justify-content:space-between;
     align-items:center;gap:12px;flex-wrap:wrap;
   }
@@ -218,7 +221,7 @@
   .badge-card{
     background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;
   }
-  .badge-card.unlocked{border-color:var(--gold);background:linear-gradient(135deg,rgba(251,191,36,.1),rgba(251,191,36,.02));}
+  .badge-card.unlocked{border-color:var(--gold);background:linear-gradient(135deg,rgba(198,242,74,.12),rgba(198,242,74,.02));}
   .badge-card .icon{font-size:30px;margin-bottom:6px;filter:grayscale(1);opacity:.5;}
   .badge-card.unlocked .icon{filter:none;opacity:1;}
   .badge-card .name{font-size:13px;font-weight:700;}
@@ -242,7 +245,7 @@
   .lb-table{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
   .lb-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;}
   .lb-row:last-child{border-bottom:none;}
-  .lb-row.me{background:rgba(34,211,238,.08);}
+  .lb-row.me{background:rgba(198,242,74,.08);}
   .lb-rank{width:24px;font-weight:800;color:var(--text-dim);flex:none;}
   .lb-rank.top1{color:var(--gold);}
   .lb-av{width:28px;height:28px;border-radius:50%;background:var(--bg-card-2);border:1px solid var(--border);
@@ -258,7 +261,7 @@
   .rule-row b{color:var(--gold);}
 
   .adv-card{
-    background:linear-gradient(135deg,#151d33,#0f1626);
+    background:linear-gradient(135deg,var(--bg-card),var(--bg-card-2));
     border:1px solid var(--border);border-radius:var(--radius);
     padding:28px;text-align:center;position:relative;overflow:hidden;margin-top:30px;
   }
@@ -267,11 +270,11 @@
   .adv-card p{color:var(--text-dim);font-size:14px;max-width:520px;margin:8px auto 20px;}
   .btn{
     display:inline-block;padding:12px 26px;border-radius:999px;font-weight:700;font-size:14px;
-    background:var(--border);color:var(--text-dim);border:1px solid var(--border);cursor:default;
+    background:var(--bg-card-2);color:var(--text-dim);border:1px solid var(--border);cursor:default;
   }
   .btn.active{
-    background:linear-gradient(90deg,var(--accent),var(--gold));color:#04121c;cursor:pointer;
-    box-shadow:0 0 20px rgba(34,211,238,.25);
+    background:var(--accent);color:var(--accent-ink);cursor:pointer;
+    box-shadow:0 0 20px rgba(198,242,74,.25);
   }
   .btn.active:hover{filter:brightness(1.08);}
 
