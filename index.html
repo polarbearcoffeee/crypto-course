@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>幣圈新手村｜資深導師帶你從零開始</title>
+<style>
+  :root{
+    --bg:#0b1120;
+    --bg-card:#121a2e;
+    --bg-card-2:#0f1626;
+    --border:#22304a;
+    --text:#e6ecf5;
+    --text-dim:#8b98b3;
+    --accent:#22d3ee;
+    --accent-2:#38bdf8;
+    --gold:#fbbf24;
+    --danger:#f87171;
+    --ok:#34d399;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC",Segoe UI,sans-serif;
+    background:radial-gradient(1200px 600px at 80% -10%, #16213f 0%, var(--bg) 60%);
+    color:var(--text);
+    line-height:1.7;
+  }
+  a{color:var(--accent);text-decoration:none;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px;}
+
+  header.top{
+    position:sticky;top:0;z-index:50;
+    background:rgba(11,17,32,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0;}
+  .brand{font-weight:800;font-size:18px;display:flex;align-items:center;gap:8px;}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);}
+  .nav-links{display:flex;gap:18px;font-size:14px;color:var(--text-dim);}
+  .nav-links a{color:var(--text-dim);}
+  .nav-links a:hover{color:var(--text);}
+  #navAdvanced{
+    padding:6px 14px;border-radius:999px;border:1px solid var(--border);
+    background:var(--bg-card-2);color:var(--text-dim);font-size:13px;
+  }
+  #navAdvanced.unlocked{
+    border-color:var(--gold);color:var(--gold);
+    box-shadow:0 0 12px rgba(251,191,36,.25);
+  }
+
+  .hero{padding:56px 0 32px;}
+  .hero .kicker{color:var(--accent);font-size:13px;letter-spacing:2px;font-weight:700;text-transform:uppercase;}
+  .hero h1{font-size:34px;margin:12px 0;line-height:1.4;}
+  .hero p.lead{color:var(--text-dim);font-size:16px;max-width:640px;}
+  .mentor-card{
+    margin-top:24px;
+    display:flex;gap:16px;align-items:flex-start;
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px 20px;
+  }
+  .mentor-avatar{
+    width:52px;height:52px;border-radius:50%;flex:none;
+    display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#04121c;
+  }
+  .mentor-card h3{margin:0 0 4px;font-size:16px;}
+  .mentor-card p{margin:0;color:var(--text-dim);font-size:14px;}
+
+  .progress-bar-outer{
+    margin-top:28px;background:var(--bg-card-2);border:1px solid var(--border);
+    border-radius:999px;height:12px;overflow:hidden;
+  }
+  .progress-bar-inner{
+    height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));
+    width:0%;transition:width .4s ease;
+  }
+  .progress-label{display:flex;justify-content:space-between;font-size:13px;color:var(--text-dim);margin-top:8px;}
+
+  section.block{padding:36px 0;}
+  section.block h2{font-size:22px;margin-bottom:6px;}
+  section.block .sub{color:var(--text-dim);font-size:14px;margin-bottom:22px;}
+
+  .module{
+    background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+    padding:22px;margin-bottom:18px;transition:border-color .2s;
+  }
+  .module.done{border-color:var(--ok);}
+  .module-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;}
+  .module-title{display:flex;align-items:center;gap:10px;}
+  .module-num{
+    width:30px;height:30px;border-radius:50%;background:var(--bg-card-2);
+    border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+    font-size:13px;color:var(--text-dim);flex:none;
+  }
+  .module.done .module-num{background:var(--ok);color:#04241a;border-color:var(--ok);}
+  .module h3{margin:0;font-size:17px;}
+  .module .meta{color:var(--text-dim);font-size:13px;margin-top:2px;}
+
+  .done-toggle{
+    display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text-dim);
+    border:1px solid var(--border);padding:7px 12px;border-radius:999px;background:var(--bg-card-2);
+    white-space:nowrap;user-select:none;
+  }
+  .done-toggle input{accent-color:var(--ok);width:15px;height:15px;}
+  .module.done .done-toggle{color:var(--ok);border-color:var(--ok);}
+
+  .module-body{margin-top:16px;}
+  .module ul{margin:0;padding-left:20px;color:var(--text-dim);font-size:14px;}
+  .module li{margin-bottom:6px;}
+
+  .video-slot{
+    margin-top:16px;border-radius:12px;overflow:hidden;background:var(--bg-card-2);
+    border:1px dashed var(--border);
+  }
+  .video-slot iframe{display:block;width:100%;aspect-ratio:16/9;border:0;}
+  .video-placeholder{
+    aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:8px;color:var(--text-dim);font-size:13px;
+  }
+  .video-placeholder .play{
+    width:44px;height:44px;border-radius:50%;background:var(--bg-card);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--accent);
+  }
+
+  .adv-card{
+    background:linear-gradient(135deg,#151d33,#0f1626);
+    border:1px solid var(--border);border-radius:var(--radius);
+    padding:28px;text-align:center;position:relative;overflow:hidden;
+  }
+  .adv-card.locked::before{
+    content:"🔒";position:absolute;top:16px;right:18px;font-size:18px;opacity:.6;
+  }
+  .adv-card h2{margin-top:0;font-size:22px;}
+  .adv-card p{color:var(--text-dim);font-size:14px;max-width:520px;margin:8px auto 20px;}
+  .btn{
+    display:inline-block;padding:12px 26px;border-radius:999px;font-weight:700;font-size:14px;
+    background:var(--border);color:var(--text-dim);border:1px solid var(--border);cursor:default;
+  }
+  .btn.active{
+    background:linear-gradient(90deg,var(--accent),var(--gold));color:#04121c;cursor:pointer;
+    box-shadow:0 0 20px rgba(34,211,238,.25);
+  }
+  .btn.active:hover{filter:brightness(1.08);}
+
+  .risk{
+    margin-top:10px;font-size:12px;color:var(--text-dim);background:var(--bg-card-2);
+    border:1px solid var(--border);border-radius:12px;padding:14px 16px;
+  }
+  .risk b{color:var(--danger);}
+
+  footer{padding:32px 0 60px;color:var(--text-dim);font-size:12px;text-align:center;}
+
+  @media (max-width:600px){
+    .hero h1{font-size:26px;}
+    .nav-links{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap nav">
+    <div class="brand"><span class="dot"></span> 幣圈新手村</div>
+    <div class="nav-links">
+      <a href="#curriculum">新手課程</a>
+      <a href="#advanced" id="navAdvanced">進階課程</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div class="kicker">CRYPTO 101 · 初版教學站</div>
+    <h1>從零開始搞懂加密貨幣，<br>不用先懂技術，也能穩穩入門。</h1>
+    <p class="lead">我是老K，做了超過八年的加密貨幣投資與研究。這個新手村不教你「明天就翻倍」的秘訣，只教你看得懂、走得穩的基本功——先把地基打好，再談進階操作。</p>
+
+    <div class="mentor-card">
+      <div class="mentor-avatar">K</div>
+      <div>
+        <h3>導師的一句話</h3>
+        <p>「我見過太多人跳過基礎直接衝進市場，結果連錯在哪都不知道。這套新手課，是我希望當年剛入圈的自己能先看到的內容。」</p>
+      </div>
+    </div>
+
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+    <div class="progress-label">
+      <span id="progressText">已完成 0 / 0 課</span>
+      <span id="progressPct">0%</span>
+    </div>
+  </section>
+
+  <section class="block" id="curriculum">
+    <h2>新手必修課程</h2>
+    <div class="sub">依順序學習效果最好。每一課都有文字重點＋教學影片，看完文字、看完影片後記得打勾標記完成。</div>
+    <div id="moduleList"></div>
+  </section>
+
+  <section class="block" id="advanced">
+    <div class="adv-card locked" id="advCard">
+      <h2 id="advTitle">🔒 進階課程</h2>
+      <p id="advDesc">完成上面全部新手課程後，才會解鎖進階課程的入口。進階課程會談鏈上分析、資產配置邏輯、風險控管與更深入的實戰案例——地基不穩,學這些只會更快摔得重。</p>
+      <a class="btn" id="advBtn" href="javascript:void(0)">進階課程入口</a>
+    </div>
+  </section>
+
+  <div class="risk">
+    <b>風險提醒：</b>本站內容為新手教育用途，僅說明基礎知識與操作觀念，不構成任何投資建議或收益保證。加密貨幣價格波動大，投入前請自行研究並評估風險，務必做好資安（私鑰、密碼、雙重驗證），錢包與交易所帳密請勿提供給任何自稱「客服」或「導師」的人。
+  </div>
+
+  <footer>
+    幣圈新手村 · 初版教學網站 · 內容持續更新中
+  </footer>
+</div>
+
+<script>
+  var MODULES = [
+    {
+      id: "what-is-crypto",
+      title: "第 1 課：加密貨幣到底是什麼？",
+      meta: "約 8 分鐘閱讀",
+      points: [
+        "加密貨幣是一種用密碼學技術保護、記錄在「區塊鏈」這種公開帳本上的數位資產。",
+        "跟銀行帳戶不同：沒有中間單位幫你保管，你的資產由你自己的「錢包」掌控。",
+        "比特幣（BTC）是第一個、也是市值最大的加密貨幣，但市場上有上千種不同用途的幣。",
+        "先建立觀念：加密貨幣是一個新的資產類別，不是穩賺不賠的提款機。"
+      ],
+      videoUrl: ""
+    },
+    {
+      id: "blockchain-basics",
+      title: "第 2 課：區塊鏈基礎，白話版",
+      meta: "約 10 分鐘閱讀",
+      points: [
+        "區塊鏈可以想成一本「所有人都有一份、寫錯不能擦掉」的帳本。",
+        "每一筆交易被打包成「區塊」，一個接一個串起來，所以叫「區塊鏈」。",
+        "因為帳本公開又不能竄改，才能在沒有銀行的情況下讓大家互相信任交易記錄。",
+        "不用懂程式碼，只要記得：公開、難篡改、大家共同維護，就是核心精神。"
+      ],
+      videoUrl: ""
+    },
+    {
+      id: "wallets-keys",
+      title: "第 3 課：錢包與私鑰——資產安全的第一道防線",
+      meta: "約 10 分鐘閱讀",
+      points: [
+        "錢包不是存幣的「容器」，而是用來保管你「私鑰」的工具，私鑰才是資產所有權的證明。",
+        "「熱錢包」連網方便交易，「冷錢包（硬體錢包）」離線保存，安全性更高，適合放長期資產。",
+        "私鑰／助記詞（12～24 個英文單字）絕對不能給任何人看、不能拍照上傳雲端、不能貼給客服。",
+        "口訣：忘記密碼可以救，私鑰丟了通常沒人救得回來。"
+      ],
+      videoUrl: ""
+    },
+    {
+      id: "buying-crypto",
+      title: "第 4 課：怎麼買到人生第一筆加密貨幣",
+      meta: "約 9 分鐘閱讀",
+      points: [
+        "交易所分兩種：中心化交易所（CEX，操作簡單、需實名認證）與去中心化交易所（DEX，需自備錢包）。",
+        "新手建議先從信譽良好、有實名認證（KYC）機制的中心化交易所開始，操作介面較友善。",
+        "下單前先搞懂「市價單」與「限價單」的差別，避免因為滑價買貴、賣便宜。",
+        "小額練習優先：先用你可以承受全部損失的小金額熟悉流程，再慢慢加碼。"
+      ],
+      videoUrl: ""
+    },
+    {
+      id: "security-scams",
+      title: "第 5 課：資安意識與常見詐騙手法",
+      meta: "約 12 分鐘閱讀",
+      points: [
+        "常見詐騙：假客服私訊要你的私鑰／驗證碼、假投資群組帶單、假交易所釣魚連結。",
+        "「保證獲利」「內線消息」「限時翻倍」——只要看到這幾個關鍵字，先假設是詐騙。",
+        "務必開啟雙重驗證（2FA），優先使用驗證器 App 而非簡訊驗證。",
+        "任何要求你「先付款才能提現」「先繳保證金解鎖資產」的情況，一律是詐騙。"
+      ],
+      videoUrl: ""
+    },
+    {
+      id: "glossary",
+      title: "第 6 課：新手必懂的 10 個幣圈術語",
+      meta: "約 7 分鐘閱讀",
+      points: [
+        "HODL：長期持有不輕易賣出的態度（源自打字錯誤的迷因）。",
+        "FOMO／FUD：追高的恐慌性追漲心理／散布恐懼或假消息帶風向。",
+        "Gas Fee：在區塊鏈上執行交易需要支付的手續費。",
+        "穩定幣（Stablecoin）：價值錨定法幣（如美元）、波動較小的加密貨幣。",
+        "市值（Market Cap）：一種幣的「現價 × 流通供應量」，粗略反映該幣的規模。"
+      ],
+      videoUrl: ""
+    }
+  ];
+
+  var STORAGE_KEY = "crypto101_progress_v1";
+
+  function loadProgress(){
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch(e){ return {}; }
+  }
+  function saveProgress(p){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+  }
+
+  function renderVideoSlot(mod){
+    if (mod.videoUrl && mod.videoUrl.trim() !== "") {
+      return '<div class="video-slot"><iframe src="' + mod.videoUrl + '" allowfullscreen loading="lazy"></iframe></div>';
+    }
+    return '<div class="video-slot"><div class="video-placeholder">' +
+      '<div class="play">▶</div>' +
+      '<div>教學影片準備中，導師會盡快補上</div>' +
+      '</div></div>';
+  }
+
+  function render(){
+    var progress = loadProgress();
+    var list = document.getElementById("moduleList");
+    list.innerHTML = "";
+
+    MODULES.forEach(function(mod, idx){
+      var isDone = !!progress[mod.id];
+      var el = document.createElement("div");
+      el.className = "module" + (isDone ? " done" : "");
+      el.innerHTML =
+        '<div class="module-head">' +
+          '<div class="module-title">' +
+            '<div class="module-num">' + (idx+1) + '</div>' +
+            '<div><h3>' + mod.title + '</h3><div class="meta">' + mod.meta + '</div></div>' +
+          '</div>' +
+          '<label class="done-toggle">' +
+            '<input type="checkbox" data-id="' + mod.id + '" ' + (isDone ? "checked" : "") + '> 標記完成' +
+          '</label>' +
+        '</div>' +
+        '<div class="module-body">' +
+          '<ul>' + mod.points.map(function(p){ return '<li>' + p + '</li>'; }).join("") + '</ul>' +
+          renderVideoSlot(mod) +
+        '</div>';
+      list.appendChild(el);
+    });
+
+    list.querySelectorAll('input[type="checkbox"]').forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var p = loadProgress();
+        p[cb.dataset.id] = cb.checked;
+        saveProgress(p);
+        render();
+      });
+    });
+
+    updateProgressUI(progress);
+  }
+
+  function updateProgressUI(progress){
+    var total = MODULES.length;
+    var done = MODULES.filter(function(m){ return !!progress[m.id]; }).length;
+    var pct = total === 0 ? 0 : Math.round(done / total * 100);
+
+    document.getElementById("progressBar").style.width = pct + "%";
+    document.getElementById("progressText").textContent = "已完成 " + done + " / " + total + " 課";
+    document.getElementById("progressPct").textContent = pct + "%";
+
+    var unlocked = done === total;
+    var navAdv = document.getElementById("navAdvanced");
+    var advCard = document.getElementById("advCard");
+    var advTitle = document.getElementById("advTitle");
+    var advDesc = document.getElementById("advDesc");
+    var advBtn = document.getElementById("advBtn");
+
+    if (unlocked){
+      navAdv.classList.add("unlocked");
+      navAdv.textContent = "🔓 進階課程";
+      advCard.classList.remove("locked");
+      advTitle.textContent = "🔓 恭喜完成新手課程！";
+      advDesc.textContent = "地基打好了。點下面的按鈕前往進階課程——目前進階課程還在製作中，敬請期待導師陸續上線的內容。";
+      advBtn.classList.add("active");
+      advBtn.onclick = function(){ window.location.href = "advanced-course.html"; };
+    } else {
+      navAdv.classList.remove("unlocked");
+      navAdv.textContent = "🔒 進階課程";
+      advCard.classList.add("locked");
+      advBtn.classList.remove("active");
+      advBtn.onclick = null;
+    }
+  }
+
+  render();
+</script>
+</body>
+</html>
