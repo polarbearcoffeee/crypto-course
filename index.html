@@ -4,6 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>交易修煉學院｜專業交易導師的紀律養成系統</title>
+
+<!-- Firebase 設定（沿用 airport-car 專案，使用 ta_ 開頭的獨立資料表） -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, onSnapshot, setDoc, getDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAOHDCmnhV4djJnaVwhp1P3Ucand_DJ4M8",
+  authDomain: "airport-car.firebaseapp.com",
+  projectId: "airport-car",
+  storageBucket: "airport-car.firebasestorage.app",
+  messagingSenderId: "497915579586",
+  appId: "1:497915579586:web:c03ae3f86abfd5a01f7f5b"
+};
+
+try {
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  window.fb = { db, collection, doc, onSnapshot, setDoc, getDoc };
+  window.dispatchEvent(new Event("fb-ready"));
+} catch (e) {
+  window.fbError = e.message;
+  window.dispatchEvent(new Event("fb-error"));
+}
+</script>
+
 <style>
   :root{
     --bg:#000000;
@@ -260,6 +287,62 @@
   .rule-row:last-child{border-bottom:none;}
   .rule-row b{color:var(--gold);}
 
+  .pin-box{max-width:340px;margin:60px auto;text-align:center;}
+  .pin-box input{
+    font-size:24px;text-align:center;letter-spacing:8px;width:100%;padding:12px;
+    border:2px solid var(--border);border-radius:12px;margin:14px 0;background:var(--bg-card);color:var(--text);
+  }
+  .pin-box input:focus{border-color:var(--accent);outline:none;}
+  .pin-hint{font-size:12px;color:var(--text-dim);margin-top:10px;}
+
+  .admin-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+  .logout-link{font-size:12px;color:var(--text-dim);cursor:pointer;text-decoration:underline;}
+
+  .admin-mod{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:16px;}
+  .admin-mod h4{margin:0 0 12px;font-size:15px;color:var(--accent);}
+  .admin-field{margin-bottom:12px;}
+  .admin-field label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:5px;}
+  .admin-field input, .admin-field textarea{
+    width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);
+    background:var(--bg-card-2);color:var(--text);font-size:13px;font-family:inherit;
+  }
+  .admin-field textarea{resize:vertical;}
+  .a-quiz{margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);}
+  .a-q{margin-bottom:14px;}
+  .a-q label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:5px;}
+  .a-q input.a-qtext{
+    width:100%;padding:9px 12px;border-radius:8px;border:1px solid var(--border);
+    background:var(--bg-card-2);color:var(--text);font-size:13px;
+  }
+  .a-opt-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+  .a-opt-row input[type="radio"]{accent-color:var(--accent);flex:none;}
+  .a-opt-row input[type="text"], .a-opt-row input:not([type]){
+    flex:1;padding:7px 10px;border-radius:8px;border:1px solid var(--border);
+    background:var(--bg-card-2);color:var(--text);font-size:13px;
+  }
+  .admin-save-btn{
+    display:block;width:100%;padding:12px;border-radius:999px;border:none;font-weight:700;font-size:14px;
+    background:var(--accent);color:var(--accent-ink);cursor:pointer;margin-top:6px;
+  }
+  .admin-note{font-size:12px;color:var(--text-dim);margin-bottom:16px;}
+
+  .stu-table{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow-x:auto;}
+  .stu-row{display:grid;grid-template-columns:1.6fr .7fr .8fr .8fr .8fr 1fr;gap:8px;padding:10px 14px;
+    border-bottom:1px solid var(--border);font-size:12px;align-items:center;white-space:nowrap;}
+  .stu-row.head{color:var(--text-dim);font-weight:700;}
+  .stu-row:last-child{border-bottom:none;}
+  .stu-row span.num{color:var(--accent);font-weight:700;}
+
+  .admin-pin-change{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap;}
+  .admin-pin-change input{
+    padding:9px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card-2);color:var(--text);
+    font-size:14px;letter-spacing:4px;width:140px;
+  }
+  .admin-pin-change button{
+    padding:9px 18px;border-radius:999px;border:none;background:var(--accent);color:var(--accent-ink);
+    font-weight:700;font-size:13px;cursor:pointer;
+  }
+
   .adv-card{
     background:linear-gradient(135deg,var(--bg-card),var(--bg-card-2));
     border:1px solid var(--border);border-radius:var(--radius);
@@ -303,6 +386,7 @@
       <button class="tab-btn" data-tab="growth">🌱 我的成長</button>
       <button class="tab-btn" data-tab="leaderboard">🏆 排行榜</button>
       <button class="tab-btn" data-tab="rules">📖 規則</button>
+      <button class="tab-btn" data-tab="admin">🎓 教師後台</button>
     </div>
     <div class="nick"><span class="av" id="navAv">K</span><span id="navNick">交易修煉者</span></div>
   </div>
@@ -386,7 +470,7 @@
   <!-- ===== Leaderboard ===== -->
   <section class="view" id="view-leaderboard">
     <h2 class="sec-title" style="margin-top:0;">🏆 排行榜</h2>
-    <div class="lb-note">目前網站還沒有帳號登入系統，排行榜暫時是「示範資料」＋你自己在這台裝置上的進度，之後接上真實會員系統才會是全站排名。</div>
+    <div class="lb-note" id="lbNote">連線資料庫中…</div>
     <div class="lb-table" id="lbTable"></div>
   </section>
 
@@ -418,6 +502,32 @@
     <div class="rule-table">
       <h4>🏅 成就徽章</h4>
       <div class="rule-row"><span>達成條件即解鎖，象徵你的紀律里程碑（不額外計 XP）</span></div>
+    </div>
+  </section>
+
+  <!-- ===== Admin ===== -->
+  <section class="view" id="view-admin">
+    <div id="adminGate"></div>
+    <div id="adminPanel" style="display:none;">
+      <div class="admin-bar">
+        <h2 class="sec-title" style="margin:0;">🎓 教師後台</h2>
+        <span class="logout-link" id="adminLogout">登出後台</span>
+      </div>
+
+      <h2 class="sec-title" style="margin-top:0;">📚 課程內容管理</h2>
+      <div class="admin-note">編輯每一課的文字重點、影片網址、測驗題目。按「儲存」後，所有學員（包括其他裝置）馬上會看到更新後的內容。</div>
+      <div id="adminContentBox"></div>
+
+      <h2 class="sec-title">👥 學員學習數據</h2>
+      <div class="admin-note" id="adminStuNote">連線資料庫中…</div>
+      <div class="stu-table" id="adminStuTable"></div>
+
+      <h2 class="sec-title">🔑 後台密碼設定</h2>
+      <div class="admin-note">目前密碼是全體老師／助教共用，不是個人帳號。務必只告訴信任的教學人員。</div>
+      <div class="admin-pin-change">
+        <input id="newPinInput" type="text" inputmode="numeric" maxlength="8" placeholder="輸入新密碼">
+        <button id="savePinBtn">更新密碼</button>
+      </div>
     </div>
   </section>
 
@@ -531,6 +641,8 @@
     }
   ];
 
+  var DEFAULT_MODULES = MODULES;
+
   var LEVELS = [
     { name: "生存者", key: "SURVIVOR" },
     { name: "實踐者", key: "PRACTITIONER" },
@@ -554,9 +666,22 @@
   var XPLOG_KEY = "trading_academy_xplog_v1";
   var CHECKIN_KEY = "trading_academy_checkin_v1";
   var NICK_KEY = "trading_academy_nick_v1";
+  var STUDENT_ID_KEY = "ta_student_id";
+  var DEFAULT_PIN = "1234";
 
   var quizState = {};
   var currentTab = "dashboard";
+  var fbOk = false;
+  var studentId = null;
+  var allStudents = [];
+  var adminSettings = { pin: DEFAULT_PIN };
+  var adminOk = sessionStorage.getItem("ta_admin_ok") === "1";
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#39;" }[c];
+    });
+  }
 
   function loadJSON(key, fallback){
     try { return JSON.parse(localStorage.getItem(key)) || fallback; }
@@ -661,7 +786,7 @@
   // ---------- Video ----------
   function renderVideoSlot(mod){
     var media = mod.videoUrl && mod.videoUrl.trim() !== ""
-      ? '<div class="video-slot"><iframe src="' + mod.videoUrl + '" allowfullscreen loading="lazy"></iframe></div>'
+      ? '<div class="video-slot"><iframe src="' + esc(mod.videoUrl) + '" allowfullscreen loading="lazy"></iframe></div>'
       : '<div class="video-slot"><div class="video-placeholder"><div class="play">▶</div><div>教學影片準備中，導師會盡快補上</div></div></div>';
     var watched = isWatched(mod.id);
     var watchBtn = watched
@@ -686,7 +811,7 @@
 
     var html = '<div class="quiz"><div class="quiz-title">📝 課後測驗（答對 ' + need + ' / ' + mod.quiz.length + ' 題才能解鎖下一課）</div>';
     mod.quiz.forEach(function(q, qIdx){
-      html += '<div class="quiz-q"><p>' + (qIdx + 1) + '. ' + q.q + '</p>';
+      html += '<div class="quiz-q"><p>' + (qIdx + 1) + '. ' + esc(q.q) + '</p>';
       q.options.forEach(function(opt, oIdx){
         var cls = "quiz-option";
         var checked = state.answers[qIdx] === oIdx ? "checked" : "";
@@ -695,7 +820,7 @@
           if (oIdx === q.correct) cls += " correct";
           else if (state.answers[qIdx] === oIdx) cls += " wrong";
         }
-        html += '<label class="' + cls + '"><input type="radio" name="q_' + mod.id + '_' + qIdx + '" value="' + oIdx + '" ' + checked + ' ' + disabled + ' data-mod="' + mod.id + '" data-q="' + qIdx + '"> ' + opt + '</label>';
+        html += '<label class="' + cls + '"><input type="radio" name="q_' + mod.id + '_' + qIdx + '" value="' + oIdx + '" ' + checked + ' ' + disabled + ' data-mod="' + mod.id + '" data-q="' + qIdx + '"> ' + esc(opt) + '</label>';
       });
       html += '</div>';
     });
@@ -736,7 +861,7 @@
         el.className = "module locked";
         el.innerHTML =
           '<div class="lock-icon">🔒</div>' +
-          '<div><h3>第 ' + (idx + 1) + ' 課：' + mod.title.replace(/^第\s*\d+\s*課[：:]\s*/, "") + '</h3>' +
+          '<div><h3>第 ' + (idx + 1) + ' 課：' + esc(mod.title.replace(/^第\s*\d+\s*課[：:]\s*/, "")) + '</h3>' +
           '<div class="lock-text">先通過 <b>第 ' + idx + ' 課</b> 的測驗才會解鎖這一課。</div></div>';
         list.appendChild(el);
         return;
@@ -747,11 +872,11 @@
         '<div class="module-head">' +
           '<div class="module-title">' +
             '<div class="module-num">' + (idx + 1) + '</div>' +
-            '<div><h3>' + mod.title + '</h3><div class="meta">' + mod.meta + '</div></div>' +
+            '<div><h3>' + esc(mod.title) + '</h3><div class="meta">' + esc(mod.meta) + '</div></div>' +
           '</div>' +
         '</div>' +
         '<div class="module-body">' +
-          '<ul>' + mod.points.map(function(p){ return '<li>' + p + '</li>'; }).join("") + '</ul>' +
+          '<ul>' + mod.points.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join("") + '</ul>' +
           renderVideoSlot(mod) +
           renderQuiz(mod) +
         '</div>';
@@ -877,8 +1002,8 @@
       var lv = LEVELS[levelOfIdx(nextIdx)];
       box.innerHTML =
         '<div class="task-card">' +
-          '<div class="lv-tag">LEVEL ' + (levelOfIdx(nextIdx)+1) + '．' + lv.name + '</div>' +
-          '<h3>' + mod.title + '</h3>' +
+          '<div class="lv-tag">LEVEL ' + (levelOfIdx(nextIdx)+1) + '．' + esc(lv.name) + '</div>' +
+          '<h3>' + esc(mod.title) + '</h3>' +
           '<div class="badges">' +
             '<span class="pill ' + (isWatched(mod.id) ? "on" : "") + '">' + (isWatched(mod.id) ? "✅ 影片已觀看" : "○ 影片未觀看") + '</span>' +
             '<span class="pill ' + (isPassed(mod.id) ? "on" : "") + '">' + (isPassed(mod.id) ? "✅ 測驗已通過" : "○ 測驗未通過") + '</span>' +
@@ -950,39 +1075,251 @@
       logBox.innerHTML = '<div class="empty-hint">還沒有 XP 紀錄，去「闖關地圖」完成第一個任務吧！</div>';
     } else {
       logBox.innerHTML = log.slice(0, 30).map(function(e){
-        return '<div class="xp-row"><div><div class="lbl">' + e.label + '</div><div class="date">' + e.date + '</div></div><div class="amt">+' + e.xp + ' XP</div></div>';
+        return '<div class="xp-row"><div><div class="lbl">' + esc(e.label) + '</div><div class="date">' + esc(e.date) + '</div></div><div class="amt">+' + e.xp + ' XP</div></div>';
       }).join("");
     }
   }
 
   // ---------- Leaderboard view ----------
   function renderLeaderboard(){
-    var demo = [
-      { name: "示範學員・阿澈", tag: "LV3．掌控者", score: 980 },
-      { name: "示範學員・小雨", tag: "LV3．掌控者", score: 860 },
-      { name: "示範學員・老鷹", tag: "LV2．實踐者", score: 640 },
-      { name: "示範學員・晴晴", tag: "LV2．實踐者", score: 520 },
-      { name: "示範學員・大成", tag: "LV1．生存者", score: 310 }
-    ];
-    var me = { name: loadNick() + "（你）", tag: "LV" + (currentLevelIdx()+1) + "．" + LEVELS[currentLevelIdx()].name, score: getTotalXp(), isMe: true };
-    var all = demo.concat([me]).sort(function(a,b){ return b.score - a.score; });
-
+    var note = document.getElementById("lbNote");
     var box = document.getElementById("lbTable");
-    box.innerHTML = all.map(function(row, i){
-      return '<div class="lb-row' + (row.isMe ? " me" : "") + '">' +
+
+    if (!fbOk){
+      note.textContent = "目前連不到資料庫，排行榜暫時只能顯示你自己在這台裝置上的進度。";
+      box.innerHTML = '<div class="lb-row me"><div class="lb-rank top1">1</div><div class="lb-av">' + esc(loadNick().charAt(0)) + '</div><div class="lb-name">' + esc(loadNick()) + '（你）<span class="tag">LV' + (currentLevelIdx()+1) + '．' + esc(LEVELS[currentLevelIdx()].name) + '</span></div><div class="lb-score">' + getTotalXp() + '</div></div>';
+      return;
+    }
+    note.textContent = "全站學員即時排名（依累積 XP），資料同步自資料庫。目前沒有帳號密碼機制，稱號可自行更改，僅供課堂參考。";
+    if (!allStudents.length){
+      box.innerHTML = '<div class="empty-hint">還沒有學員資料，趕快完成第一個任務衝上榜首！</div>';
+      return;
+    }
+    var sorted = allStudents.slice().sort(function(a,b){ return (b.xp||0) - (a.xp||0); });
+    box.innerHTML = sorted.map(function(s, i){
+      var isMe = s.id === studentId;
+      var name = s.name || "學員";
+      return '<div class="lb-row' + (isMe ? " me" : "") + '">' +
         '<div class="lb-rank' + (i === 0 ? " top1" : "") + '">' + (i+1) + '</div>' +
-        '<div class="lb-av">' + row.name.charAt(0) + '</div>' +
-        '<div class="lb-name">' + row.name + '<span class="tag">' + row.tag + '</span></div>' +
-        '<div class="lb-score">' + row.score + '</div>' +
+        '<div class="lb-av">' + esc(name.charAt(0)) + '</div>' +
+        '<div class="lb-name">' + esc(name) + (isMe ? "（你）" : "") + '<span class="tag">LV' + (s.level||1) + '．' + esc(s.levelName||"") + '</span></div>' +
+        '<div class="lb-score">' + (s.xp||0) + '</div>' +
       '</div>';
     }).join("");
   }
+
+  // ---------- Firebase：學員身分與同步 ----------
+  function ensureStudentIdentity(){
+    var id = localStorage.getItem(STUDENT_ID_KEY);
+    if (!id){
+      id = "s_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      localStorage.setItem(STUDENT_ID_KEY, id);
+      if (loadNick() === "交易修煉者"){
+        localStorage.setItem(NICK_KEY, "學員" + id.slice(-4));
+      }
+    }
+    studentId = id;
+    syncStudentToFirestore();
+  }
+
+  function syncStudentToFirestore(){
+    if (!fbOk || !studentId) return;
+    var { db, doc, setDoc } = window.fb;
+    var lvIdx = currentLevelIdx();
+    setDoc(doc(db, "ta_students", studentId), {
+      name: loadNick(),
+      xp: getTotalXp(),
+      level: lvIdx + 1,
+      levelName: LEVELS[lvIdx].name,
+      passedCount: passedCount(),
+      totalModules: MODULES.length,
+      badgeCount: unlockedBadgeCount(),
+      checkinStreak: loadCheckin().streak,
+      progress: loadProgress(),
+      lastActive: new Date().toISOString()
+    }, { merge: true }).catch(function(){});
+  }
+
+  function onFbReady(){
+    fbOk = true;
+    var { db, doc, onSnapshot, collection } = window.fb;
+
+    onSnapshot(doc(db, "ta_content", "curriculum"), function(snap){
+      if (snap.exists() && snap.data().modules && snap.data().modules.length){
+        MODULES = snap.data().modules;
+      } else {
+        MODULES = DEFAULT_MODULES;
+      }
+      quizState = {};
+      renderAll();
+    }, function(){ /* offline/permission fallback: keep DEFAULT_MODULES */ });
+
+    onSnapshot(doc(db, "ta_settings", "app"), function(snap){
+      adminSettings.pin = (snap.exists() && snap.data().pin) ? snap.data().pin : DEFAULT_PIN;
+    }, function(){});
+
+    onSnapshot(collection(db, "ta_students"), function(snap){
+      allStudents = snap.docs.map(function(d){ return Object.assign({ id: d.id }, d.data()); });
+      renderLeaderboard();
+      renderAdminStudents();
+    }, function(){});
+
+    ensureStudentIdentity();
+    renderAll();
+  }
+  window.addEventListener("fb-ready", onFbReady);
+  window.addEventListener("fb-error", function(){ fbOk = false; renderAll(); });
+
+  // ---------- Admin：教師後台 ----------
+  function renderAdminGate(){
+    document.getElementById("adminGate").innerHTML =
+      '<div class="pin-box card">' +
+        '<h2 class="sec-title" style="margin-top:0;">🎓 教師後台登入</h2>' +
+        '<input id="adminPinInput" type="password" inputmode="numeric" placeholder="輸入後台密碼" maxlength="8">' +
+        '<button class="checkin-btn" id="adminPinBtn" style="width:100%;">解鎖</button>' +
+        '<div class="pin-hint">預設密碼 1234，請盡快在後台改成只有教學團隊知道的密碼。</div>' +
+      '</div>';
+    document.getElementById("adminPinBtn").addEventListener("click", tryAdminPin);
+    document.getElementById("adminPinInput").addEventListener("keydown", function(e){
+      if (e.key === "Enter") tryAdminPin();
+    });
+  }
+  function tryAdminPin(){
+    var v = document.getElementById("adminPinInput").value.trim();
+    var pin = adminSettings.pin || DEFAULT_PIN;
+    if (v === pin){
+      adminOk = true;
+      sessionStorage.setItem("ta_admin_ok", "1");
+      renderAdmin();
+    } else {
+      alert("密碼錯誤，請再試一次。");
+    }
+  }
+  document.getElementById("adminLogout").addEventListener("click", function(){
+    adminOk = false;
+    sessionStorage.removeItem("ta_admin_ok");
+    renderAdmin();
+  });
+
+  function renderAdmin(){
+    var gate = document.getElementById("adminGate");
+    var panel = document.getElementById("adminPanel");
+    if (!adminOk){
+      panel.style.display = "none";
+      gate.style.display = "block";
+      renderAdminGate();
+      return;
+    }
+    gate.style.display = "none";
+    panel.style.display = "block";
+    renderAdminContent();
+    renderAdminStudents();
+  }
+
+  function renderAdminContent(){
+    var box = document.getElementById("adminContentBox");
+    box.innerHTML = MODULES.map(function(mod, mIdx){
+      return '<div class="admin-mod" data-midx="' + mIdx + '">' +
+        '<h4>第 ' + (mIdx + 1) + ' 課</h4>' +
+        '<div class="admin-field"><label>標題</label><input class="a-title" value="' + esc(mod.title) + '"></div>' +
+        '<div class="admin-field"><label>閱讀時間</label><input class="a-meta" value="' + esc(mod.meta) + '"></div>' +
+        '<div class="admin-field"><label>文字重點（每行一項）</label><textarea class="a-points" rows="4">' + esc(mod.points.join("\n")) + '</textarea></div>' +
+        '<div class="admin-field"><label>影片網址（YouTube embed 網址，可留空）</label><input class="a-video" value="' + esc(mod.videoUrl || "") + '"></div>' +
+        '<div class="a-quiz">' +
+          mod.quiz.map(function(q, qIdx){
+            return '<div class="a-q" data-qidx="' + qIdx + '">' +
+              '<label>測驗題 ' + (qIdx + 1) + '</label>' +
+              '<input class="a-qtext" value="' + esc(q.q) + '" style="margin-bottom:8px;">' +
+              q.options.map(function(opt, oIdx){
+                return '<div class="a-opt-row">' +
+                  '<input type="radio" name="a-correct-' + mIdx + '-' + qIdx + '" class="a-correct" value="' + oIdx + '" ' + (q.correct === oIdx ? "checked" : "") + '>' +
+                  '<input class="a-opt" value="' + esc(opt) + '">' +
+                '</div>';
+              }).join("") +
+            '</div>';
+          }).join("") +
+        '</div>' +
+      '</div>';
+    }).join("") + '<button class="admin-save-btn" id="saveContentBtn">💾 儲存課程內容（所有學員立即看到更新）</button>';
+
+    document.getElementById("saveContentBtn").addEventListener("click", saveCurriculum);
+  }
+
+  function saveCurriculum(){
+    var newModules = [];
+    document.querySelectorAll(".admin-mod").forEach(function(el){
+      var mIdx = parseInt(el.dataset.midx, 10);
+      var old = MODULES[mIdx];
+      var title = el.querySelector(".a-title").value.trim();
+      var meta = el.querySelector(".a-meta").value.trim();
+      var points = el.querySelector(".a-points").value.split("\n").map(function(s){ return s.trim(); }).filter(Boolean);
+      var videoUrl = el.querySelector(".a-video").value.trim();
+      var quiz = [];
+      el.querySelectorAll(".a-q").forEach(function(qEl){
+        var qtext = qEl.querySelector(".a-qtext").value.trim();
+        var options = Array.from(qEl.querySelectorAll(".a-opt")).map(function(i){ return i.value.trim(); });
+        var correctEl = qEl.querySelector(".a-correct:checked");
+        var correct = correctEl ? parseInt(correctEl.value, 10) : 0;
+        quiz.push({ q: qtext, options: options, correct: correct });
+      });
+      newModules.push({ id: old.id, title: title, meta: meta, points: points, videoUrl: videoUrl, quiz: quiz });
+    });
+
+    if (!fbOk){
+      alert("目前連不到資料庫，暫時無法同步給其他人，這次修改只會在你自己的瀏覽器生效。");
+      MODULES = newModules;
+      quizState = {};
+      renderAll();
+      return;
+    }
+    var { db, doc, setDoc } = window.fb;
+    setDoc(doc(db, "ta_content", "curriculum"), { modules: newModules, updatedAt: new Date().toISOString() })
+      .then(function(){ alert("已儲存！所有學員會看到最新課程內容。"); })
+      .catch(function(err){ alert("儲存失敗：" + err.message); });
+  }
+
+  function renderAdminStudents(){
+    var note = document.getElementById("adminStuNote");
+    var box = document.getElementById("adminStuTable");
+    if (!note || !box) return;
+    if (!fbOk){
+      note.textContent = "目前連不到資料庫，暫時看不到學員數據。";
+      box.innerHTML = "";
+      return;
+    }
+    note.textContent = "共 " + allStudents.length + " 位學員，依累積 XP 排序。";
+    var sorted = allStudents.slice().sort(function(a, b){ return (b.xp||0) - (a.xp||0); });
+    var head = '<div class="stu-row head"><span>名稱</span><span>XP</span><span>關卡</span><span>通過課數</span><span>成就數</span><span>最後上線</span></div>';
+    box.innerHTML = head + sorted.map(function(s){
+      var last = s.lastActive ? new Date(s.lastActive).toLocaleString("zh-TW") : "—";
+      return '<div class="stu-row">' +
+        '<span>' + esc(s.name || "學員") + '</span>' +
+        '<span class="num">' + (s.xp||0) + '</span>' +
+        '<span>LV' + (s.level||1) + '</span>' +
+        '<span>' + (s.passedCount||0) + ' / ' + (s.totalModules||MODULES.length) + '</span>' +
+        '<span>' + (s.badgeCount||0) + ' / 7</span>' +
+        '<span>' + last + '</span>' +
+      '</div>';
+    }).join("");
+  }
+
+  document.getElementById("savePinBtn").addEventListener("click", function(){
+    var v = document.getElementById("newPinInput").value.trim();
+    if (!v){ alert("請輸入新密碼。"); return; }
+    if (!fbOk){ alert("目前連不到資料庫，無法更新密碼。"); return; }
+    var { db, doc, setDoc } = window.fb;
+    setDoc(doc(db, "ta_settings", "app"), { pin: v }, { merge: true })
+      .then(function(){ alert("密碼已更新。"); document.getElementById("newPinInput").value = ""; })
+      .catch(function(err){ alert("更新失敗：" + err.message); });
+  });
 
   function renderAll(){
     renderDashboard();
     renderMap();
     renderGrowth();
     renderLeaderboard();
+    renderAdmin();
+    syncStudentToFirestore();
   }
 
   switchTab("dashboard");
