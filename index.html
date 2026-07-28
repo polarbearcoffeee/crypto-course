@@ -294,6 +294,21 @@ try {
   .rule-row:last-child{border-bottom:none;}
   .rule-row b{color:var(--gold);}
 
+  .reg-gate{
+    position:fixed;inset:0;z-index:200;overflow-y:auto;padding:40px 20px;
+    display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(900px 500px at 85% -10%, rgba(198,242,74,.08) 0%, transparent 60%), var(--bg);
+  }
+  .reg-card{max-width:460px;width:100%;background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:32px 28px;}
+  .reg-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:22px;}
+  .reg-title{font-size:20px;margin:0 0 10px;}
+  .reg-lead{color:var(--text-dim);font-size:14px;line-height:1.7;margin:0 0 20px;}
+  .reg-link-btn{
+    display:block;text-align:center;padding:13px;border-radius:999px;font-weight:700;font-size:14px;
+    background:var(--accent);color:var(--accent-ink);
+  }
+  .reg-note{font-size:12px;color:var(--text-dim);margin-top:12px;line-height:1.6;}
+
   .pin-box{max-width:340px;margin:60px auto;text-align:center;}
   .pin-box input{
     font-size:24px;text-align:center;letter-spacing:8px;width:100%;padding:12px;
@@ -334,7 +349,7 @@ try {
   .admin-note{font-size:12px;color:var(--text-dim);margin-bottom:16px;}
 
   .stu-table{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow-x:auto;}
-  .stu-row{display:grid;grid-template-columns:1.6fr .7fr .8fr .8fr .8fr 1fr;gap:8px;padding:10px 14px;
+  .stu-row{display:grid;grid-template-columns:1.3fr 1fr .6fr .7fr .8fr .7fr 1fr;gap:8px;padding:10px 14px;
     border-bottom:1px solid var(--border);font-size:12px;align-items:center;white-space:nowrap;}
   .stu-row.head{color:var(--text-dim);font-weight:700;}
   .stu-row:last-child{border-bottom:none;}
@@ -384,6 +399,48 @@ try {
 </head>
 <body>
 
+<div id="regGate" class="reg-gate">
+  <div class="reg-card">
+    <div class="reg-logo-row">
+      <div class="brand-logo">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="14" cy="38" rx="6" ry="13" fill="#0e0f10" transform="rotate(-15 14 38)"/>
+          <ellipse cx="50" cy="38" rx="6" ry="13" fill="#0e0f10" transform="rotate(15 50 38)"/>
+          <ellipse cx="32" cy="38" rx="17" ry="21" fill="#0e0f10"/>
+          <circle cx="32" cy="17" r="13" fill="#0e0f10"/>
+          <ellipse cx="32" cy="40" rx="10" ry="15" fill="#ffffff"/>
+          <circle cx="27" cy="15" r="2.6" fill="#ffffff"/>
+          <circle cx="37" cy="15" r="2.6" fill="#ffffff"/>
+          <circle cx="27.8" cy="15" r="1.2" fill="#0e0f10"/>
+          <circle cx="37.8" cy="15" r="1.2" fill="#0e0f10"/>
+          <polygon points="29,20 35,20 32,25" fill="#f5b942"/>
+          <ellipse cx="25" cy="59" rx="5" ry="2.6" fill="#f5b942"/>
+          <ellipse cx="39" cy="59" rx="5" ry="2.6" fill="#f5b942"/>
+        </svg>
+      </div>
+      <div class="brand-name">PMC企鵝戰隊<span class="sub">交易修煉學院</span></div>
+    </div>
+
+    <h2 class="reg-title">開始之前，先完成兩件事</h2>
+    <p class="reg-lead">這套課程只給真的加入 PMC 企鵝戰隊的人用。請先用下面的專屬連結註冊 Bitunix 交易所帳號，再填寫你的暱稱與會員編號，就可以馬上開始上課。</p>
+
+    <a class="reg-link-btn" href="https://www.bitunix.com/register?vipCode=aaNA" target="_blank" rel="noopener">① 前往 Bitunix 完成註冊 ↗</a>
+
+    <div class="admin-field" style="margin-top:18px;">
+      <label>② 你的暱稱</label>
+      <input id="regName" type="text" placeholder="例如：半夜戰神企鵝哥" maxlength="20">
+    </div>
+    <div class="admin-field">
+      <label>③ 你的 Bitunix 會員編號（UID）</label>
+      <input id="regUid" type="text" placeholder="註冊完成後，在 Bitunix 個人資料頁可以找到">
+    </div>
+
+    <button class="admin-save-btn" id="regSubmitBtn">完成註冊，開始上課 →</button>
+    <p class="reg-note">暱稱之後可以在網站右上角自己修改；會員編號只給老師之後核對名單用，不會公開顯示。</p>
+  </div>
+</div>
+
+<div id="appShell" style="display:none;">
 <header class="top">
   <div class="wrap nav">
     <div class="brand">
@@ -576,6 +633,7 @@ try {
 
   <footer>PMC企鵝戰隊 · 交易修煉學院 · 內容持續更新中</footer>
 </div>
+</div>
 
 <script>
   var MODULES = [
@@ -710,6 +768,7 @@ try {
   var CHECKIN_KEY = "trading_academy_checkin_v1";
   var NICK_KEY = "trading_academy_nick_v1";
   var STUDENT_ID_KEY = "ta_student_id";
+  var UID_KEY = "ta_bitunix_uid";
   var DEFAULT_PIN = "1234";
 
   var quizState = {};
@@ -1154,12 +1213,16 @@ try {
   // ---------- Firebase：學員身分與同步 ----------
   function ensureStudentIdentity(){
     var id = localStorage.getItem(STUDENT_ID_KEY);
+    if (!id) return; // 還沒完成註冊，先不建立身分，等註冊送出才建立
+    studentId = id;
+    syncStudentToFirestore();
+  }
+
+  function createStudentIdentity(){
+    var id = localStorage.getItem(STUDENT_ID_KEY);
     if (!id){
       id = "s_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
       localStorage.setItem(STUDENT_ID_KEY, id);
-      if (loadNick() === "交易修煉者"){
-        localStorage.setItem(NICK_KEY, "學員" + id.slice(-4));
-      }
     }
     studentId = id;
     syncStudentToFirestore();
@@ -1171,6 +1234,7 @@ try {
     var lvIdx = currentLevelIdx();
     setDoc(doc(db, "ta_students", studentId), {
       name: loadNick(),
+      bitunixUid: localStorage.getItem(UID_KEY) || "",
       xp: getTotalXp(),
       level: lvIdx + 1,
       levelName: LEVELS[lvIdx].name,
@@ -1332,11 +1396,12 @@ try {
     }
     note.textContent = "共 " + allStudents.length + " 位學員，依累積 XP 排序。";
     var sorted = allStudents.slice().sort(function(a, b){ return (b.xp||0) - (a.xp||0); });
-    var head = '<div class="stu-row head"><span>名稱</span><span>XP</span><span>關卡</span><span>通過課數</span><span>成就數</span><span>最後上線</span></div>';
+    var head = '<div class="stu-row head"><span>名稱</span><span>Bitunix UID</span><span>XP</span><span>關卡</span><span>通過課數</span><span>成就數</span><span>最後上線</span></div>';
     box.innerHTML = head + sorted.map(function(s){
       var last = s.lastActive ? new Date(s.lastActive).toLocaleString("zh-TW") : "—";
       return '<div class="stu-row">' +
         '<span>' + esc(s.name || "學員") + '</span>' +
+        '<span>' + esc(s.bitunixUid || "—") + '</span>' +
         '<span class="num">' + (s.xp||0) + '</span>' +
         '<span>LV' + (s.level||1) + '</span>' +
         '<span>' + (s.passedCount||0) + ' / ' + (s.totalModules||MODULES.length) + '</span>' +
@@ -1365,7 +1430,30 @@ try {
     syncStudentToFirestore();
   }
 
-  switchTab("dashboard");
+  function enterApp(){
+    document.getElementById("regGate").style.display = "none";
+    document.getElementById("appShell").style.display = "block";
+    switchTab("dashboard");
+  }
+
+  document.getElementById("regSubmitBtn").addEventListener("click", function(){
+    var name = document.getElementById("regName").value.trim();
+    var uid = document.getElementById("regUid").value.trim();
+    if (!name || !uid){
+      alert("請填寫暱稱與 Bitunix 會員編號（UID）再繼續。");
+      return;
+    }
+    localStorage.setItem(NICK_KEY, name);
+    localStorage.setItem(UID_KEY, uid);
+    createStudentIdentity();
+    enterApp();
+  });
+
+  if (localStorage.getItem(STUDENT_ID_KEY)){
+    enterApp();
+  } else {
+    document.getElementById("regGate").style.display = "flex";
+  }
 </script>
 </body>
 </html>
