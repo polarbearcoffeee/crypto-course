@@ -78,9 +78,11 @@ try {
   .brand-name .sub{font-size:10px;font-weight:600;color:var(--text-dim);letter-spacing:1px;}
   .tabs{display:flex;gap:4px;flex-wrap:wrap;background:var(--bg-card-2);border:1px solid var(--border);border-radius:999px;padding:4px;}
   .tab-btn{
+    display:inline-flex;align-items:center;gap:6px;
     padding:7px 14px;border-radius:999px;border:none;background:transparent;
     color:var(--text-dim);font-size:13px;cursor:pointer;white-space:nowrap;
   }
+  .tab-btn svg{width:16px;height:16px;flex:none;}
   .tab-btn.active{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700;}
   .nick{font-size:13px;color:var(--text-dim);display:flex;align-items:center;gap:6px;white-space:nowrap;}
   .nick .av{
@@ -404,12 +406,30 @@ try {
       <div class="brand-name">PMC企鵝戰隊<span class="sub">交易修煉學院</span></div>
     </div>
     <div class="tabs" id="tabBar">
-      <button class="tab-btn" data-tab="dashboard">📊 儀表板</button>
-      <button class="tab-btn" data-tab="map">🗺️ 闖關地圖</button>
-      <button class="tab-btn" data-tab="growth">🌱 我的成長</button>
-      <button class="tab-btn" data-tab="leaderboard">🏆 排行榜</button>
-      <button class="tab-btn" data-tab="rules">📖 規則</button>
-      <button class="tab-btn" data-tab="admin">🎓 教師後台</button>
+      <button class="tab-btn" data-tab="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+        <span>儀表板</span>
+      </button>
+      <button class="tab-btn" data-tab="map">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="3,5 9,3 15,5 21,3 21,19 15,21 9,19 3,21"/><line x1="9" y1="3" x2="9" y2="19"/><line x1="15" y1="5" x2="15" y2="21"/></svg>
+        <span>闖關地圖</span>
+      </button>
+      <button class="tab-btn" data-tab="growth">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,17 9,11 13,15 21,5"/><polyline points="15,5 21,5 21,11"/></svg>
+        <span>我的成長</span>
+      </button>
+      <button class="tab-btn" data-tab="leaderboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 5H5a3 3 0 0 0 3 3"/><path d="M16 5h3a3 3 0 0 1-3 3"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="17" x2="12" y2="20"/></svg>
+        <span>排行榜</span>
+      </button>
+      <button class="tab-btn" data-tab="rules">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><polyline points="15,3 15,7 19,7"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg>
+        <span>規則</span>
+      </button>
+      <button class="tab-btn" data-tab="admin">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></svg>
+        <span>教師後台</span>
+      </button>
     </div>
     <div class="nick"><span class="av" id="navAv">K</span><span id="navNick">交易修煉者</span></div>
   </div>
