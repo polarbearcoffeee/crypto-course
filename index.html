@@ -349,7 +349,7 @@ try {
   .admin-note{font-size:12px;color:var(--text-dim);margin-bottom:16px;}
 
   .stu-table{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow-x:auto;}
-  .stu-row{display:grid;grid-template-columns:1.3fr 1fr .6fr .7fr .8fr .7fr 1fr;gap:8px;padding:10px 14px;
+  .stu-row{display:grid;grid-template-columns:1.3fr 1fr .6fr .7fr .8fr .7fr 1fr .9fr;gap:8px;padding:10px 14px;
     border-bottom:1px solid var(--border);font-size:12px;align-items:center;white-space:nowrap;}
   .stu-row.head{color:var(--text-dim);font-weight:700;}
   .stu-row:last-child{border-bottom:none;}
@@ -769,7 +769,16 @@ try {
   var NICK_KEY = "trading_academy_nick_v1";
   var STUDENT_ID_KEY = "ta_student_id";
   var UID_KEY = "ta_bitunix_uid";
+  var TRAFFIC_KEY = "ta_traffic_source";
   var DEFAULT_PIN = "1234";
+
+  function captureTrafficSource(){
+    var ref = new URLSearchParams(location.search).get("ref");
+    if (ref && !localStorage.getItem(TRAFFIC_KEY)){
+      localStorage.setItem(TRAFFIC_KEY, ref.slice(0, 60));
+    }
+  }
+  captureTrafficSource();
 
   var quizState = {};
   var currentTab = "dashboard";
@@ -1235,6 +1244,7 @@ try {
     setDoc(doc(db, "ta_students", studentId), {
       name: loadNick(),
       bitunixUid: localStorage.getItem(UID_KEY) || "",
+      trafficSource: localStorage.getItem(TRAFFIC_KEY) || "",
       xp: getTotalXp(),
       level: lvIdx + 1,
       levelName: LEVELS[lvIdx].name,
@@ -1396,7 +1406,7 @@ try {
     }
     note.textContent = "共 " + allStudents.length + " 位學員，依累積 XP 排序。";
     var sorted = allStudents.slice().sort(function(a, b){ return (b.xp||0) - (a.xp||0); });
-    var head = '<div class="stu-row head"><span>名稱</span><span>Bitunix UID</span><span>XP</span><span>關卡</span><span>通過課數</span><span>成就數</span><span>最後上線</span></div>';
+    var head = '<div class="stu-row head"><span>名稱</span><span>Bitunix UID</span><span>XP</span><span>關卡</span><span>通過課數</span><span>成就數</span><span>最後上線</span><span>來源</span></div>';
     box.innerHTML = head + sorted.map(function(s){
       var last = s.lastActive ? new Date(s.lastActive).toLocaleString("zh-TW") : "—";
       return '<div class="stu-row">' +
@@ -1407,6 +1417,7 @@ try {
         '<span>' + (s.passedCount||0) + ' / ' + (s.totalModules||MODULES.length) + '</span>' +
         '<span>' + (s.badgeCount||0) + ' / 7</span>' +
         '<span>' + last + '</span>' +
+        '<span>' + esc(s.trafficSource || "—") + '</span>' +
       '</div>';
     }).join("");
   }
