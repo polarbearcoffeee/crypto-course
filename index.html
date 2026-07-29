@@ -91,7 +91,49 @@ try {
   }
 
   .view{display:none;padding:32px 0 60px;}
-  .view.active{display:block;}
+  .view.active{display:block;animation:viewIn 240ms cubic-bezier(.16,1,.3,1) both;}
+
+  @keyframes viewIn{ from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+  @keyframes fadeInOnly{ from{opacity:0;} to{opacity:1;} }
+  @keyframes passPulse{
+    0%{ box-shadow:0 0 0 0 rgba(198,242,74,.45); }
+    60%{ box-shadow:0 0 0 14px rgba(198,242,74,0); }
+    100%{ box-shadow:0 0 0 0 rgba(198,242,74,0); }
+  }
+
+  .module, .badge-card, .lb-row, .stat-card, .stu-row, .level-progress{
+    animation:viewIn 260ms cubic-bezier(.16,1,.3,1) both;
+  }
+  .module:nth-of-type(1), .badge-card:nth-of-type(1), .lb-row:nth-of-type(1), .stat-card:nth-of-type(1), .stu-row:nth-of-type(1){animation-delay:0ms;}
+  .module:nth-of-type(2), .badge-card:nth-of-type(2), .lb-row:nth-of-type(2), .stat-card:nth-of-type(2), .stu-row:nth-of-type(2){animation-delay:40ms;}
+  .module:nth-of-type(3), .badge-card:nth-of-type(3), .lb-row:nth-of-type(3), .stat-card:nth-of-type(3), .stu-row:nth-of-type(3){animation-delay:80ms;}
+  .module:nth-of-type(4), .badge-card:nth-of-type(4), .lb-row:nth-of-type(4), .stu-row:nth-of-type(4){animation-delay:120ms;}
+  .module:nth-of-type(5), .badge-card:nth-of-type(5), .lb-row:nth-of-type(5), .stu-row:nth-of-type(5){animation-delay:160ms;}
+  .module:nth-of-type(6), .badge-card:nth-of-type(6), .lb-row:nth-of-type(6), .stu-row:nth-of-type(6){animation-delay:200ms;}
+  .badge-card:nth-of-type(7), .lb-row:nth-of-type(7), .stu-row:nth-of-type(7){animation-delay:240ms;}
+  .lb-row:nth-of-type(8), .stu-row:nth-of-type(8){animation-delay:280ms;}
+
+  .quiz-passed-banner, .badge-card.unlocked{ animation:viewIn 280ms cubic-bezier(.34,1.56,.64,1) both; }
+  .module.just-passed{ animation:passPulse 900ms ease-out; }
+
+  #adminPanel{ animation:viewIn 260ms cubic-bezier(.16,1,.3,1) both; }
+  .pin-box{ animation:viewIn 260ms cubic-bezier(.16,1,.3,1) both; }
+
+  .tab-btn{ transition:background-color 180ms ease-out, color 180ms ease-out; }
+
+  .reg-gate{ transition:opacity 180ms cubic-bezier(.4,0,1,1), transform 180ms cubic-bezier(.4,0,1,1); }
+  .reg-gate.leaving{ opacity:0; transform:scale(.98); pointer-events:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    .view.active, .module, .badge-card, .lb-row, .stat-card, .stu-row, .level-progress,
+    .quiz-passed-banner, .badge-card.unlocked, #adminPanel, .pin-box{
+      animation:fadeInOnly 140ms ease-out both !important;
+      animation-delay:0ms !important;
+    }
+    .module.just-passed{ animation:none !important; }
+    .reg-gate{ transition:opacity 120ms ease-out !important; }
+    .reg-gate.leaving{ transform:none !important; }
+  }
 
   .hero .kicker{color:var(--accent);font-size:13px;letter-spacing:2px;font-weight:700;text-transform:uppercase;}
   .hero h1{font-size:32px;margin:12px 0;line-height:1.4;}
@@ -781,6 +823,7 @@ try {
   captureTrafficSource();
 
   var quizState = {};
+  var justPassedId = null;
   var currentTab = "dashboard";
   var fbOk = false;
   var studentId = null;
@@ -978,7 +1021,7 @@ try {
         return;
       }
 
-      el.className = "module" + (passed ? " passed" : "");
+      el.className = "module" + (passed ? " passed" : "") + (mod.id === justPassedId ? " just-passed" : "");
       el.innerHTML =
         '<div class="module-head">' +
           '<div class="module-title">' +
@@ -1041,6 +1084,7 @@ try {
             var rank = score === mod.quiz.length ? "S" : "A";
             var xp = rank === "S" ? 150 : 100;
             addXp("通關任務：" + mod.title.replace(/^第\s*\d+\s*課[：:]\s*/, "") + "（" + rank + " 評級）", xp);
+            justPassedId = modId;
           }
         }
         renderAll();
@@ -1076,6 +1120,7 @@ try {
       advBtn.classList.remove("active");
       advBtn.onclick = null;
     }
+    justPassedId = null;
   }
 
   // ---------- Dashboard view ----------
@@ -1447,6 +1492,12 @@ try {
     switchTab("dashboard");
   }
 
+  function completeRegistration(){
+    var gate = document.getElementById("regGate");
+    gate.classList.add("leaving");
+    setTimeout(enterApp, 180);
+  }
+
   document.getElementById("regSubmitBtn").addEventListener("click", function(){
     var name = document.getElementById("regName").value.trim();
     var uid = document.getElementById("regUid").value.trim();
@@ -1457,7 +1508,7 @@ try {
     localStorage.setItem(NICK_KEY, name);
     localStorage.setItem(UID_KEY, uid);
     createStudentIdentity();
-    enterApp();
+    completeRegistration();
   });
 
   if (localStorage.getItem(STUDENT_ID_KEY)){
