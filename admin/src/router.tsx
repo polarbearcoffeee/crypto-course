@@ -5,18 +5,19 @@ import {
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
-import { AdminShell } from "./ui/AdminShell";
+import { DemoAdminGate } from "./ui/DemoAdminGate";
 import { DashboardPage } from "./views/DashboardPage";
 import { AnalyticsPage } from "./views/AnalyticsPage";
 import { CurriculumPage } from "./views/CurriculumPage";
 import { LearnersPage } from "./views/LearnersPage";
+import { PlatformLinksPage } from "./views/PlatformLinksPage";
 import { SettingsPage } from "./views/SettingsPage";
 
 const rootRoute = createRootRoute({
   component: () => (
-    <AdminShell>
+    <DemoAdminGate>
       <Outlet />
-    </AdminShell>
+    </DemoAdminGate>
   ),
 });
 
@@ -50,12 +51,19 @@ const settingsRoute = createRoute({
   component: SettingsPage,
 });
 
+const resourcesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/resources",
+  component: PlatformLinksPage,
+});
+
 const routeTree = rootRoute.addChildren([
   dashboardRoute,
   learnersRoute,
   curriculumRoute,
   analyticsRoute,
   settingsRoute,
+  resourcesRoute,
 ]);
 
 export const router = createRouter({
