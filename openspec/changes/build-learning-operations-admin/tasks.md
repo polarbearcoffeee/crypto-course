@@ -122,3 +122,14 @@
 - [ ] 10.8 Replace learner full-collection subscription and render-triggered write paths with the new contracts.
 - [ ] 10.9 Run full regression, accessibility, performance, data reconciliation, and authorized security testing.
 - [x] 10.10 Record final acceptance, remaining risks, rollback window, and post-launch monitoring ownership.
+
+## 11. GitHub Pages demo consolidation
+
+- [x] 11.1 Add a browser-only demonstration login and clearly label that it is not production authentication.
+- [x] 11.2 Import all six legacy lessons and all eighteen legacy quiz questions into the new curriculum editor.
+- [x] 11.3 Integrate learner search, UID review, learning status, internal notes, and UTF-8 CSV export into the new admin.
+- [x] 11.4 Add a browser-local shared-PIN migration and disablement tool without treating it as production authorization.
+- [x] 11.5 Add a platform-links page covering public pages, direct admin routes, repository, Actions, Pages settings, OpenSpec, and acceptance evidence.
+- [x] 11.6 Add regression tests for demo authentication, legacy content, learner operations, settings migration, and link inventory.
+- [x] 11.7 Document demo credentials, persistence limits, and the boundary between GitHub Pages and a real backend.
+- [ ] 11.8 Replace browser-local demonstration state with named Firebase Authentication, Firestore, Security Rules, and trusted APIs before production use.

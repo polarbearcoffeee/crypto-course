@@ -4,8 +4,11 @@ import {
   Activity,
   BarChart3,
   BookOpenCheck,
+  ExternalLink,
   Gauge,
   GraduationCap,
+  Link2,
+  LogOut,
   Menu,
   Settings2,
 } from "lucide-react";
@@ -16,9 +19,19 @@ const navigation = [
   { to: "/curriculum", label: "課程發布", icon: BookOpenCheck },
   { to: "/analytics", label: "學習分析", icon: BarChart3 },
   { to: "/settings", label: "系統治理", icon: Settings2 },
+  { to: "/resources", label: "平台連結", icon: Link2 },
 ] as const;
 
-export function AdminShell({ children }: { children: ReactNode }) {
+type AdminShellProps = {
+  children: ReactNode;
+  operator?: {
+    displayName: string;
+    role: string;
+  };
+  onLogout?: () => void;
+};
+
+export function AdminShell({ children, operator, onLogout }: AdminShellProps) {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -51,6 +64,16 @@ export function AdminShell({ children }: { children: ReactNode }) {
             </Link>
           ))}
         </nav>
+        <div className="sidebar-shortcuts">
+          <a href="https://polarbearcoffeee.github.io/crypto-course/" target="_blank" rel="noreferrer">
+            <ExternalLink size={15} aria-hidden="true" />
+            學員前台
+          </a>
+          <a href="https://github.com/polarbearcoffeee/crypto-course" target="_blank" rel="noreferrer">
+            <ExternalLink size={15} aria-hidden="true" />
+            GitHub 專案
+          </a>
+        </div>
         <div className="system-signal">
           <Activity size={18} aria-hidden="true" />
           <span><strong>開發環境</strong><small>僅使用示範資料</small></span>
@@ -72,8 +95,17 @@ export function AdminShell({ children }: { children: ReactNode }) {
             <span className="environment-label">DEV / ASIA–TAIPEI</span>
           </div>
           <div className="operator">
-            <span className="operator-dot" aria-hidden="true" />
-            <span>尚未登入</span>
+            <span className={`operator-dot${operator ? " authenticated" : ""}`} aria-hidden="true" />
+            <span>
+              <strong>{operator?.displayName ?? "尚未登入"}</strong>
+              {operator && <small>{operator.role} · 展示模式</small>}
+            </span>
+            {onLogout && (
+              <button type="button" onClick={onLogout}>
+                <LogOut size={15} aria-hidden="true" />
+                登出
+              </button>
+            )}
           </div>
         </header>
         <main>{children}</main>

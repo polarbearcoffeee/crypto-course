@@ -2,6 +2,21 @@
 
 給接手開發的工程團隊看的技術說明。專案負責人／PM：`polarbearcoffeee`（GitHub 帳號）。
 
+## 2026 新後台整合狀態
+
+- 學員前台：https://polarbearcoffeee.github.io/crypto-course/
+- 新營運後台：https://polarbearcoffeee.github.io/crypto-course/admin/
+- 展示帳號：`owner@pmc.demo`
+- 展示密碼：`PMC-demo-2026`
+- 部署流程：推送到 `main` 後，由 `.github/workflows/pages.yml` 建置 React 後台並部署 GitHub Pages。
+
+新後台已整合舊版的課程與題庫編輯、學員與 UID 管理、CSV 匯出、舊 PIN 遷移及
+平台連結總覽。GitHub Pages 版本仍是**純展示站**：登入與資料儲存只在瀏覽器內
+模擬，不等同 VPS，也沒有正式資料庫或伺服器端權限保護。
+
+下方「原始系統說明」保留舊版架構脈絡；新後台的使用與驗證方式請看
+[`admin/README.md`](admin/README.md)。
+
 ## 專案是什麼
 
 一個給「PMC企鵝戰隊」社群使用的加密貨幣交易紀律訓練網站，兩個角色：
@@ -11,15 +26,15 @@
 
 商業脈絡：這是一個交易導師（人設「老K」）用來篩選／培養透過他的 Bitunix 推薦連結註冊的學員的工具，UID 收集**純粹是自報資料**，網站沒有、也不可能跟 Bitunix 做真的驗證比對（那是 Bitunix 私人的聯盟後台）。
 
-## 線上網址 / 倉庫 / 部署
+## 原始系統說明：線上網址 / 倉庫 / 部署
 
 - 正式站：https://polarbearcoffeee.github.io/crypto-course/
 - 倉庫：https://github.com/polarbearcoffeee/crypto-course
-- 部署方式：**GitHub Pages，直接從 `main` 分支根目錄部署**。沒有 CI/CD、沒有建置流程——`git push` 到 `main` 之後，GitHub Pages 大約 1–2 分鐘內自動更新正式站。沒有 staging 環境。
+- 部署方式：**GitHub Pages + GitHub Actions**。`main` 更新後，工作流程會保留舊學員前台並建置 `admin/` React 後台，再一起發布。沒有 staging 環境。
 
-## 技術棧
+## 原始學員前台技術棧
 
-**純靜態網站，沒有任何建置工具。**
+**這一節只描述原始學員前台。新後台使用 React、TypeScript、Vite 與 Vitest。**
 
 - 沒有 `package.json`、沒有 bundler（Webpack/Vite 都沒有）、沒有框架（沒有 React/Vue）、沒有 TypeScript、沒有 CSS 預處理器、沒有 linter、沒有測試框架。
 - 全部程式碼在兩個檔案裡：
