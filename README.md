@@ -14,6 +14,11 @@
 平台連結總覽。GitHub Pages 版本仍是**純展示站**：登入與資料儲存只在瀏覽器內
 模擬，不等同 VPS，也沒有正式資料庫或伺服器端權限保護。
 
+目前倉庫 Pages 設定仍是 legacy 分支發布，因此 `admin/index.html` 與 `admin/assets/`
+也會保存一份可直接發布的正式建置。它們由 `npm.cmd run build:pages` 自動產生，
+不得手動修改；若倉庫 Owner 日後把 Pages Source 切成 GitHub Actions，現有 workflow
+也可直接發布同一份產物。
+
 下方「原始系統說明」保留舊版架構脈絡；新後台的使用與驗證方式請看
 [`admin/README.md`](admin/README.md)。
 

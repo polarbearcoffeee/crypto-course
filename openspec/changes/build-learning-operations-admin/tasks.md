@@ -132,4 +132,5 @@
 - [x] 11.5 Add a platform-links page covering public pages, direct admin routes, repository, Actions, Pages settings, OpenSpec, and acceptance evidence.
 - [x] 11.6 Add regression tests for demo authentication, legacy content, learner operations, settings migration, and link inventory.
 - [x] 11.7 Document demo credentials, persistence limits, and the boundary between GitHub Pages and a real backend.
-- [ ] 11.8 Replace browser-local demonstration state with named Firebase Authentication, Firestore, Security Rules, and trusted APIs before production use.
+- [x] 11.8 Add a reproducible committed production bundle for the repository's legacy branch-based Pages source.
+- [ ] 11.9 Replace browser-local demonstration state with named Firebase Authentication, Firestore, Security Rules, and trusted APIs before production use.

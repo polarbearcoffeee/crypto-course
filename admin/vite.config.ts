@@ -4,6 +4,11 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   base: "/crypto-course/admin/",
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      input: "vite.html",
+    },
+  },
   server: {
     port: 4173,
   },

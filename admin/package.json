@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite --config vite.config.ts",
     "build": "tsc -b && vite build --config vite.config.ts",
+    "build:pages": "npm run build && npm run sync:pages",
+    "sync:pages": "node scripts/sync-pages-build.mjs",
     "test": "vitest run --config vite.config.ts",
     "test:watch": "vitest --config vite.config.ts",
     "typecheck": "tsc -b --pretty false"

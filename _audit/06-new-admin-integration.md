@@ -41,3 +41,10 @@ Firestore Security Rules 與可信任後端 API。
 3. 學員 UID 狀態與內部備註可更新，重新讀取展示資料後仍存在。
 4. 舊 PIN 可修改並標記停用，但畫面明確說明它不是正式授權機制。
 5. GitHub Pages 建置後，學員前台與 `/admin/` 必須同時可開啟。
+
+## Pages 發布相容處理
+
+部署驗收發現倉庫的 Pages Source 仍是 `main / root` 舊式發布；它會在 Actions
+完成後，以未建置的 `admin/index.html` 覆蓋新版。由於目前部署帳號沒有倉庫 Pages
+管理權，已加入可重現的 `build:pages` 流程，把正式 HTML 與雜湊資源同步到
+`admin/index.html`、`admin/assets/`。CI 會重新產生並比對，避免提交過期產物。
