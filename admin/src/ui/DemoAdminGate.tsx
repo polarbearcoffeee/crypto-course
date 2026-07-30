@@ -17,13 +17,13 @@ function hasDemoSession(): boolean {
 
 export function DemoAdminGate({ children }: { children: ReactNode }) {
   const [authenticated, setAuthenticated] = useState(hasDemoSession);
-  const [email, setEmail] = useState<string>(demoAdministrator.email);
+  const [username, setUsername] = useState<string>(demoAdministrator.username);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   function signIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!verifyDemoAdministrator(email, password)) {
+    if (!verifyDemoAdministrator(username, password)) {
       setError("展示帳號或密碼不正確，請使用下方提供的展示資料。");
       return;
     }
@@ -67,10 +67,10 @@ export function DemoAdminGate({ children }: { children: ReactNode }) {
           <label className="form-field">
             <span>展示帳號</span>
             <input
-              type="email"
+              type="text"
               autoComplete="username"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
               required
             />
           </label>
@@ -96,7 +96,7 @@ export function DemoAdminGate({ children }: { children: ReactNode }) {
         <div className="demo-credential">
           <Eye size={18} aria-hidden="true" />
           <span>
-            <strong>展示帳號：{demoAdministrator.email}</strong>
+            <strong>展示帳號：{demoAdministrator.username}</strong>
             <small>展示密碼：{demoAdministrator.password}</small>
           </span>
         </div>

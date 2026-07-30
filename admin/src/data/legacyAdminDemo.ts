@@ -23,8 +23,8 @@ export type DemoLearner = Learner & {
 };
 
 export const demoAdministrator = Object.freeze({
-  email: "owner@pmc.demo",
-  password: "PMC-demo-2026",
+  username: "admin",
+  password: "1234",
   displayName: "PMC 展示 Owner",
   role: "Owner",
 });
@@ -265,9 +265,9 @@ function saveStored<T>(key: string, value: T): void {
   window.localStorage.setItem(key, JSON.stringify(value));
 }
 
-export function verifyDemoAdministrator(email: string, password: string): boolean {
+export function verifyDemoAdministrator(username: string, password: string): boolean {
   return (
-    email.trim().toLowerCase() === demoAdministrator.email &&
+    username.trim().toLowerCase() === demoAdministrator.username &&
     password === demoAdministrator.password
   );
 }

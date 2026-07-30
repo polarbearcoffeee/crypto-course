@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { PlatformLinksPage } from "./PlatformLinksPage";
 
@@ -22,5 +22,13 @@ describe("PlatformLinksPage", () => {
       "href",
       "https://github.com/polarbearcoffeee/crypto-course",
     );
+    expect(screen.getByRole("heading", { name: "網站地圖" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /營運後台/ })).toHaveAttribute(
+      "href",
+      "https://polarbearcoffeee.github.io/crypto-course/admin/",
+    );
+    const siteMap = screen.getByRole("region", { name: "網站地圖" });
+    expect(within(siteMap).getByText("闖關地圖")).toBeInTheDocument();
+    expect(within(siteMap).getByText("系統治理")).toBeInTheDocument();
   });
 });

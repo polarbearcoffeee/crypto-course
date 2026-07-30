@@ -13,7 +13,7 @@ if (!targetAssets.startsWith(`${adminDirectory}\\`) && !targetAssets.startsWith(
   throw new Error("Refusing to write Pages assets outside the admin directory.");
 }
 
-const builtHtml = await readFile(sourceHtml, "utf8");
+const builtHtml = (await readFile(sourceHtml, "utf8")).replace(/\r\n?/g, "\n");
 await rm(targetAssets, { recursive: true, force: true });
 await mkdir(targetAssets, { recursive: true });
 await cp(sourceAssets, targetAssets, { recursive: true });

@@ -6,8 +6,8 @@
 
 - 學員前台：https://polarbearcoffeee.github.io/crypto-course/
 - 新營運後台：https://polarbearcoffeee.github.io/crypto-course/admin/
-- 展示帳號：`owner@pmc.demo`
-- 展示密碼：`PMC-demo-2026`
+- 展示帳號：`admin`
+- 展示密碼：`1234`
 - 部署流程：推送到 `main` 後，由 `.github/workflows/pages.yml` 建置 React 後台並部署 GitHub Pages。
 
 新後台已整合舊版的課程與題庫編輯、學員與 UID 管理、CSV 匯出、舊 PIN 遷移及
