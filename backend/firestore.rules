@@ -1,0 +1,227 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function profilePath() {
+      return /databases/$(database)/documents/adminUsers/$(request.auth.uid);
+    }
+
+    function activeAdmin() {
+      return signedIn()
+        && exists(profilePath())
+        && get(profilePath()).data.status == "active";
+    }
+
+    function hasRole(role) {
+      return activeAdmin()
+        && request.auth.token.roles is list
+        && role in request.auth.token.roles
+        && role in get(profilePath()).data.roles;
+    }
+
+    // The same role must exist in both the signed token and server-owned
+    // profile. A stale or forged client-side role alone never grants access.
+    function hasAnyRole(allowedRoles) {
+      return (allowedRoles.hasAny(["owner"]) && hasRole("owner"))
+        || (allowedRoles.hasAny(["lead-teacher"]) && hasRole("lead-teacher"))
+        || (allowedRoles.hasAny(["assistant"]) && hasRole("assistant"))
+        || (allowedRoles.hasAny(["content-editor"]) && hasRole("content-editor"))
+        || (allowedRoles.hasAny(["analyst"]) && hasRole("analyst"));
+    }
+
+    function isOwner() {
+      return hasAnyRole(["owner"]);
+    }
+
+    function canViewDashboard() {
+      return hasAnyRole([
+        "owner",
+        "lead-teacher",
+        "assistant",
+        "content-editor",
+        "analyst"
+      ]);
+    }
+
+    function canViewPii() {
+      return hasAnyRole(["owner", "lead-teacher", "assistant"]);
+    }
+
+    function canEditLearners() {
+      return hasAnyRole(["owner", "lead-teacher", "assistant"]);
+    }
+
+    function canVerifyUid() {
+      return hasAnyRole(["owner", "lead-teacher", "assistant"]);
+    }
+
+    function canEditCurriculum() {
+      return hasAnyRole(["owner", "lead-teacher", "content-editor"]);
+    }
+
+    function canViewAudit() {
+      return hasAnyRole(["owner", "lead-teacher"]);
+    }
+
+    function learnerHasOnlyPublicOperationalFields(data) {
+      return data.keys().hasOnly([
+        "learnerId",
+        "legacyLearnerId",
+        "nickname",
+        "sourceFirst",
+        "sourceLatest",
+        "status",
+        "learningState",
+        "uidStatus",
+        "currentCourseId",
+        "currentLessonId",
+        "lastActiveAt",
+        "tags",
+        "followUpOwnerId",
+        "createdAt",
+        "updatedAt"
+      ]);
+    }
+
+    match /learners/{learnerId} {
+      allow get, list: if canViewDashboard();
+      allow create, delete: if false;
+      allow update: if canEditLearners()
+        && learnerHasOnlyPublicOperationalFields(request.resource.data)
+        && request.resource.data.learnerId == resource.data.learnerId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "status",
+          "uidStatus",
+          "tags",
+          "followUpOwnerId",
+          "updatedAt"
+        ]);
+    }
+
+    // UID and contact fields are physically separated from directory records,
+    // because Firestore Rules cannot redact individual fields from a document.
+    match /learnerPrivate/{learnerId} {
+      allow get, list: if canViewPii();
+      allow create, update, delete: if false;
+    }
+
+    match /learnerNotes/{noteId} {
+      allow get, list: if canViewPii();
+      allow create: if canEditLearners()
+        && request.resource.data.keys().hasOnly([
+          "learnerId",
+          "body",
+          "authorId",
+          "createdAt",
+          "updatedAt"
+        ])
+        && request.resource.data.authorId == request.auth.uid
+        && request.resource.data.body is string
+        && request.resource.data.body.size() > 0
+        && request.resource.data.body.size() <= 2000;
+      allow update: if canEditLearners()
+        && request.resource.data.authorId == resource.data.authorId
+        && request.resource.data.learnerId == resource.data.learnerId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "body",
+          "updatedAt"
+        ]);
+      allow delete: if false;
+    }
+
+    match /uidVerifications/{verificationId} {
+      allow get, list: if canViewPii();
+      allow create: if false;
+      allow update: if canVerifyUid()
+        && request.resource.data.learnerId == resource.data.learnerId
+        && request.resource.data.uidValue == resource.data.uidValue
+        && request.resource.data.uidNormalized == resource.data.uidNormalized
+        && request.resource.data.verifierId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "status",
+          "reason",
+          "verifierId",
+          "verifiedAt"
+        ]);
+      allow delete: if false;
+    }
+
+    match /curriculumDrafts/{draftId} {
+      allow get, list: if canViewDashboard();
+      allow create: if canEditCurriculum()
+        && request.resource.data.editorId == request.auth.uid
+        && request.resource.data.status in ["draft", "in-review"];
+      allow update: if canEditCurriculum()
+        && (isOwner() || resource.data.editorId == request.auth.uid)
+        && request.resource.data.courseId == resource.data.courseId
+        && request.resource.data.editorId == resource.data.editorId
+        && request.resource.data.status in ["draft", "in-review"];
+      allow delete: if false;
+    }
+
+    // Publishing is a multi-document transaction and is trusted-function only.
+    match /curriculumVersions/{versionId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    match /curriculumCurrent/{courseId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    match /adminUsers/{adminId} {
+      allow get: if activeAdmin() && (request.auth.uid == adminId || isOwner());
+      allow list: if isOwner();
+      // Role and lifecycle changes are trusted-function only.
+      allow create, update, delete: if false;
+    }
+
+    match /settingsVersions/{versionId} {
+      allow get, list: if canViewDashboard();
+      // Settings changes and rollback are trusted-function only.
+      allow create, update, delete: if false;
+    }
+
+    match /settingsCurrent/{settingId} {
+      allow get, list: if true;
+      allow create, update, delete: if false;
+    }
+
+    match /exportJobs/{jobId} {
+      allow get: if activeAdmin() && resource.data.requesterId == request.auth.uid;
+      allow list: if false;
+      // Export permission, field masking, confirmation and reason are checked
+      // before the Admin SDK creates a job.
+      allow create, update, delete: if false;
+    }
+
+    match /auditLogs/{auditId} {
+      allow get, list: if canViewAudit();
+      allow create, update, delete: if false;
+    }
+
+    match /metricDaily/{metricId} {
+      allow get, list: if canViewDashboard();
+      allow create, update, delete: if false;
+    }
+
+    match /metricCohorts/{metricId} {
+      allow get, list: if canViewDashboard();
+      allow create, update, delete: if false;
+    }
+
+    match /metricLessons/{metricId} {
+      allow get, list: if canViewDashboard();
+      allow create, update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
