@@ -23,9 +23,9 @@ describe("legacy admin demo integration", () => {
   });
 
   it("accepts only the documented demo administrator credential", () => {
-    expect(verifyDemoAdministrator(demoAdministrator.email, demoAdministrator.password)).toBe(true);
-    expect(verifyDemoAdministrator("wrong@pmc.demo", demoAdministrator.password)).toBe(false);
-    expect(verifyDemoAdministrator(demoAdministrator.email, "wrong-password")).toBe(false);
+    expect(verifyDemoAdministrator(demoAdministrator.username, demoAdministrator.password)).toBe(true);
+    expect(verifyDemoAdministrator("wrong-admin", demoAdministrator.password)).toBe(false);
+    expect(verifyDemoAdministrator(demoAdministrator.username, "wrong-password")).toBe(false);
   });
 
   it("exports the learner demo rows as UTF-8 compatible CSV content", () => {

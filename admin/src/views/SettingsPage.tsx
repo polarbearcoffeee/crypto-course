@@ -76,7 +76,7 @@ function Roles() {
       </div>
       <article className="demo-admin-account">
         <span className="operator-dot authenticated" />
-        <div><strong>{demoAdministrator.displayName}</strong><small>{demoAdministrator.email}</small></div>
+        <div><strong>{demoAdministrator.displayName}</strong><small>{demoAdministrator.username}</small></div>
         <span className="status-badge">Owner</span>
       </article>
       <div className="role-table">

@@ -1,5 +1,26 @@
-import { CheckCircle2, ExternalLink, Github, Link2, ShieldAlert } from "lucide-react";
+import { CheckCircle2, ExternalLink, Github, Link2, Network, ShieldAlert } from "lucide-react";
 import { PageHeader } from "../ui/PageHeader";
+
+const siteMapBranches = [
+  {
+    label: "學員前台",
+    note: "學習與闖關",
+    href: "https://polarbearcoffeee.github.io/crypto-course/",
+    pages: ["儀表板", "闖關地圖", "我的成長", "排行榜", "規則", "進階課程"],
+  },
+  {
+    label: "營運後台",
+    note: "管理與分析",
+    href: "https://polarbearcoffeee.github.io/crypto-course/admin/",
+    pages: ["營運總覽", "學員營運", "課程與測驗", "學習分析", "系統治理", "平台連結"],
+  },
+  {
+    label: "專案與發布",
+    note: "開發與驗收",
+    href: "https://github.com/polarbearcoffeee/crypto-course",
+    pages: ["GitHub 程式碼", "GitHub Actions", "Pages 部署", "OpenSpec", "驗收文件"],
+  },
+] as const;
 
 const publicLinks = [
   {
@@ -68,6 +89,30 @@ export function PlatformLinksPage() {
           </a>
         )}
       />
+
+      <section className="link-section site-map-section" aria-labelledby="site-map-title">
+        <div className="section-heading">
+          <div><p className="panel-kicker">SITE MAP</p><h2 id="site-map-title">網站地圖</h2></div>
+          <span><Network size={14} />全平台入口與頁面架構</span>
+        </div>
+        <div className="site-map-root">
+          <span className="brand-mark" aria-hidden="true">PMC</span>
+          <div><strong>交易修煉學院</strong><small>crypto-course</small></div>
+        </div>
+        <div className="site-map-grid">
+          {siteMapBranches.map((branch) => (
+            <article className="site-map-branch" key={branch.label}>
+              <a href={branch.href} target="_blank" rel="noreferrer">
+                <span><strong>{branch.label}</strong><small>{branch.note}</small></span>
+                <ExternalLink size={15} aria-hidden="true" />
+              </a>
+              <ul>
+                {branch.pages.map((page) => <li key={page}>{page}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
 
       <section className="link-section" aria-labelledby="public-links-title">
         <div className="section-heading">
