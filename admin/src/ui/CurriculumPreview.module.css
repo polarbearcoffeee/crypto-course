@@ -1,0 +1,142 @@
+.preview {
+  width: 100%;
+  margin: 0;
+  border: 1px solid #34372f;
+  color: #f1f3e9;
+  background: #11130f;
+  overflow: hidden;
+}
+
+.desktop {
+  min-height: 420px;
+}
+
+.mobile {
+  width: min(100%, 390px);
+  min-height: 560px;
+  margin-inline: auto;
+  border-width: 8px 2px;
+}
+
+.toolbar {
+  min-height: 46px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #34372f;
+  color: #aaafa1;
+  background: #191b17;
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+.mode {
+  color: #cbef3a;
+  font-weight: 800;
+}
+
+.content {
+  min-height: inherit;
+  padding: 32px;
+}
+
+.mobile .content {
+  padding: 24px 18px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #cbef3a;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(24px, 4vw, 38px);
+  line-height: 1.1;
+}
+
+.description {
+  max-width: 68ch;
+  margin: 14px 0 0;
+  color: #aaafa1;
+  line-height: 1.7;
+}
+
+.status {
+  margin-top: 26px;
+  padding: 18px;
+  border-left: 3px solid #cbef3a;
+  background: #20241a;
+}
+
+.status[data-tone="warning"] {
+  border-left-color: #f3bd51;
+  background: #211e16;
+}
+
+.status[data-tone="danger"] {
+  border-left-color: #ff745c;
+  background: #241916;
+}
+
+.status strong,
+.status span {
+  display: block;
+}
+
+.status span {
+  margin-top: 7px;
+  color: #aaafa1;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.quiz {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #34372f;
+}
+
+.quiz p {
+  margin: 0 0 12px;
+  font-weight: 800;
+}
+
+.options {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  list-style: none;
+}
+
+.options li {
+  padding: 12px;
+  border: 1px solid #34372f;
+  color: #d9ddcf;
+  background: #191b17;
+}
+
+.message {
+  min-height: 310px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.message h3 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.message p {
+  max-width: 42ch;
+  margin: 10px auto 0;
+  color: #aaafa1;
+  line-height: 1.6;
+}

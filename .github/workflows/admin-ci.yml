@@ -1,0 +1,69 @@
+name: Admin CI
+
+on:
+  push:
+    paths:
+      - "admin/**"
+      - "backend/**"
+      - "openspec/**"
+      - ".github/workflows/admin-ci.yml"
+  pull_request:
+    paths:
+      - "admin/**"
+      - "backend/**"
+      - "openspec/**"
+      - ".github/workflows/admin-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            admin/package-lock.json
+            backend/package-lock.json
+
+      - name: Set up Java for Firebase Emulator
+        uses: actions/setup-java@v4
+        with:
+          distribution: microsoft
+          java-version: "21"
+
+      - name: Install admin dependencies
+        run: npm ci
+        working-directory: admin
+
+      - name: Type check
+        run: npm run typecheck
+        working-directory: admin
+
+      - name: Run unit and component tests
+        run: npm test
+        working-directory: admin
+
+      - name: Build production bundle
+        run: npm run build
+        working-directory: admin
+
+      - name: Install backend dependencies
+        run: npm ci
+        working-directory: backend
+
+      - name: Run backend and Firestore Rules tests
+        run: npm run test:all
+        working-directory: backend
+
+      - name: Validate OpenSpec
+        run: npx --yes @fission-ai/openspec@1.6.0 validate build-learning-operations-admin

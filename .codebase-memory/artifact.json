@@ -1,0 +1,11 @@
+{
+    "schema_version": 2,
+    "commit": "b41d8d645723f8fc709bed22fd35b5e4466afa09",
+    "indexed_at": "2026-07-30T12:54:45Z",
+    "project": "D-AI-45_ctyptocourse-crypto-course",
+    "nodes": 406,
+    "edges": 402,
+    "original_size": 1376256,
+    "compressed_size": 40627,
+    "compression_level": 9
+}

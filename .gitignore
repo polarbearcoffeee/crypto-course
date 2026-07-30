@@ -1,0 +1,30 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+admin/vite.config.js
+admin/vite.config.d.ts
+
+# Environment files: keep committed examples and non-secret demo placeholders only
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Firebase emulator and local runtime state
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Temporary artifacts
+*.tmp
+*.log
