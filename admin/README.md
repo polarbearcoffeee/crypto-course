@@ -30,7 +30,9 @@ npm.cmd install
 npm.cmd run dev
 ```
 
-開啟終端顯示的本機網址。畫面中的人數、比例及工作佇列皆為合成示範資料。
+開啟終端顯示網址後的 `/crypto-course/admin/vite.html`。畫面中的人數、比例及工作佇列
+皆為合成示範資料。`index.html` 與 `assets/` 是提供舊式 GitHub Pages 直接發布的
+自動產物，請勿手動編輯。
 
 ## 驗證
 
@@ -38,4 +40,10 @@ npm.cmd run dev
 npm.cmd run typecheck
 npm.cmd test
 npm.cmd run build
+```
+
+若要同步提交給舊式 GitHub Pages 的正式建置檔：
+
+```powershell
+npm.cmd run build:pages
 ```

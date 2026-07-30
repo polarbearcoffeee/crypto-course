@@ -42,7 +42,8 @@ jobs:
         run: |
           mkdir -p _site/admin
           cp index.html advanced-course.html _site/
-          cp -R admin/dist/. _site/admin/
+          cp admin/dist/vite.html _site/admin/index.html
+          cp -R admin/dist/assets _site/admin/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

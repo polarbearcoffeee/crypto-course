@@ -57,6 +57,12 @@ jobs:
         run: npm run build
         working-directory: admin
 
+      - name: Verify committed legacy Pages bundle
+        run: |
+          npm run sync:pages
+          git diff --exit-code -- index.html assets
+        working-directory: admin
+
       - name: Install backend dependencies
         run: npm ci
         working-directory: backend
